@@ -1,0 +1,15 @@
+<RCC>
+  <qresource prefix="Resource">
+    <file>icons/arrow-right.svg</file>
+    <file>icons/checkbox-disabled-checked.svg</file>
+    <file>icons/checkbox-disabled-unchecked.svg</file>
+    <file>icons/checkbox-enabled-checked.svg</file>
+    <file>icons/checkbox-enabled-checked-hover.svg</file>
+    <file>icons/checkbox-enabled-unchecked.svg</file>
+    <file>icons/checkbox-enabled-unchecked-hover.svg</file>
+    <file>icons/download.svg</file>
+    <file>icons/drop-arrow-down.svg</file>
+    <file>icons/drop-arrow-up.svg</file>
+    <file>icons/finish.svg</file>
+  </qresource>
+</RCC>

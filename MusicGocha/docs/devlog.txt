@@ -1,0 +1,12 @@
+Alp.1 2023/07/09
++ 绘制RootWindow页面UI
++ 编写标准风格QSS
+
+Alp.2 2023/07/10
++ 绘制OnlineSearcher页面UI
++ 完善标准风格QSS
+
+Alp.3 2023/07/11
++ 创建VisualStudio项目
++ 编写程序启动逻辑
++ 实现RootWindow tabbar页面切换交互
