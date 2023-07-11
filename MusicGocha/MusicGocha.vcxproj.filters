@@ -1,55 +1,57 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>qml;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Form Files">
-      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
-      <Extensions>ui</Extensions>
-    </Filter>
-    <Filter Include="Translation Files">
-      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
-      <Extensions>ts</Extensions>
-    </Filter>
     <Filter Include="Documents">
       <UniqueIdentifier>{31b379a4-1a30-43e2-99bb-7644bfd25e4b}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ControlHub.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RootWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ControlHub.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <QtUic Include="ui\RootWindow.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="RootWindow.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
+    <Filter Include="code">
+      <UniqueIdentifier>{21d9b5ae-e793-4527-9d90-934686ee42ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="code\OnlineSearcher">
+      <UniqueIdentifier>{b6da10d8-9586-4b50-8984-e3aa3769da62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="code\RootWindow">
+      <UniqueIdentifier>{b637f347-11f7-4279-912d-b72204410284}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="docs\devlog.txt">
       <Filter>Documents</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\code\ControlHub.cpp">
+      <Filter>code</Filter>
+    </ClCompile>
+    <ClCompile Include="src\code\main.cpp">
+      <Filter>code</Filter>
+    </ClCompile>
+    <ClCompile Include="src\code\RootWindow\RootWindow.cpp">
+      <Filter>code\RootWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="src\code\OnlineSearcher\OnlineSearcherU.cpp">
+      <Filter>code\OnlineSearcher</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\code\ControlHub.h">
+      <Filter>code</Filter>
+    </ClInclude>
+    <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherU.h">
+      <Filter>code\OnlineSearcher</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="src\code\RootWindow\RootWindow.h">
+      <Filter>code\RootWindow</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="src\ui\RootWindow.ui">
+      <Filter>code\RootWindow</Filter>
+    </QtUic>
+    <QtUic Include="src\ui\OnlineSearcherW.ui">
+      <Filter>code\OnlineSearcher</Filter>
+    </QtUic>
   </ItemGroup>
 </Project>

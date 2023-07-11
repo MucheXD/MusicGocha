@@ -117,19 +117,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ControlHub.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="RootWindow.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ControlHub.h" />
-    <QtMoc Include="RootWindow.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtUic Include="ui\RootWindow.ui" />
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="docs\devlog.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\code\ControlHub.cpp" />
+    <ClCompile Include="src\code\main.cpp" />
+    <ClCompile Include="src\code\OnlineSearcher\OnlineSearcherU.cpp" />
+    <ClCompile Include="src\code\RootWindow\RootWindow.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\code\ControlHub.h" />
+    <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherU.h" />
+    <QtMoc Include="src\code\RootWindow\RootWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="src\ui\OnlineSearcherW.ui" />
+    <QtUic Include="src\ui\RootWindow.ui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
