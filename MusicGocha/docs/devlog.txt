@@ -11,3 +11,7 @@ Alp.3 2023/07/11
 + 编写程序启动逻辑
 + 实现RootWindow tabbar页面切换交互
 + 更改代码文件结构
+
+Alp.4 2023/07/15
++ 在RootWindow创建页面创建与释放逻辑
++ 实现了OnlineSearcher在RootWindow子控件中的显示

@@ -32,12 +32,18 @@
     <ClCompile Include="src\code\OnlineSearcher\OnlineSearcherU.cpp">
       <Filter>code\OnlineSearcher</Filter>
     </ClCompile>
+    <ClCompile Include="src\code\OnlineSearcher\OnlineSearcherC.cpp">
+      <Filter>code\OnlineSearcher</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\code\ControlHub.h">
       <Filter>code</Filter>
     </ClInclude>
     <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherU.h">
+      <Filter>code\OnlineSearcher</Filter>
+    </ClInclude>
+    <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherC.h">
       <Filter>code\OnlineSearcher</Filter>
     </ClInclude>
   </ItemGroup>
