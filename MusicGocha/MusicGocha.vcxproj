@@ -136,6 +136,10 @@
     <QtUic Include="src\ui\OnlineSearcherW.ui" />
     <QtUic Include="src\ui\RootWindow.ui" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="configs\config.mtd" />
+    <None Include="configs\style.qss" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />

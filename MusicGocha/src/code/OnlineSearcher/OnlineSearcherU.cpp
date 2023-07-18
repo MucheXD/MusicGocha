@@ -1,27 +1,14 @@
 #include "OnlineSearcherU.h"
 
-OnlineSearcherU::OnlineSearcherU(QWidget* parent)
+OnlineSearcherU::OnlineSearcherU()
 {
 	ui_os.setupUi(this);
 
-	QTimer* testtimer = new QTimer;
-	connect(testtimer, &QTimer::timeout, this, &OnlineSearcherU::testifdeleted);
-	testtimer->start(1000);
-
-
-	this->setParent(parent);
+	connect(ui_os.edit_searchInput, &QLineEdit::returnPressed, ui_os.pb_startSearching, &QPushButton::animateClick);
+	connect(ui_os.pb_startSearching, &QPushButton::clicked, this, &OnlineSearcherU::startSearching);
 }
 
-bool OnlineSearcherU::tryDelete()
+void OnlineSearcherU::startSearching()
 {
-	//这里应该有一些判断是否有重要资源应保留的判断，若认为不该删除，返回false
-	this->hide();
-	this->deleteLater();
-	qDebug() << "Deleted?";
-	return true;
-}
-
-void OnlineSearcherU::testifdeleted()
-{
-	qDebug() << "Not deleted yet";
+	qDebug() << QApplication::applicationDirPath();
 }

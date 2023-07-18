@@ -13,6 +13,9 @@
     <Filter Include="code\RootWindow">
       <UniqueIdentifier>{b637f347-11f7-4279-912d-b72204410284}</UniqueIdentifier>
     </Filter>
+    <Filter Include="configs">
+      <UniqueIdentifier>{16ec6814-1c96-45a5-b0a0-20a6495add34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="docs\devlog.txt">
@@ -59,5 +62,13 @@
     <QtUic Include="src\ui\OnlineSearcherW.ui">
       <Filter>code\OnlineSearcher</Filter>
     </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="configs\config.mtd">
+      <Filter>configs</Filter>
+    </None>
+    <None Include="configs\style.qss">
+      <Filter>configs</Filter>
+    </None>
   </ItemGroup>
 </Project>

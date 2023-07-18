@@ -15,3 +15,9 @@ Alp.3 2023/07/11
 Alp.4 2023/07/15
 + 在RootWindow创建页面创建与释放逻辑
 + 实现了OnlineSearcher在RootWindow子控件中的显示
+
+Alp5. 2023/07/18
+(这个版本在代码上修改不大)
++ 确认自动窗口布局正常
++ 更改代码逻辑结构，从Core->Ui->Widget而非原先的Ui->Core/Widget
++ 将原先写在.ui的样式表独立为文件，以便后期更换

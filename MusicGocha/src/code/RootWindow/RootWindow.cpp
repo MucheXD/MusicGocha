@@ -16,7 +16,19 @@ RootWindowU::RootWindowU()
 	ui_rw.pb_tabbar_onlineSearcher->setChecked(true);
 	changePage();
 
+	reloadStyleSheet();
 	this->show();
+}
+
+bool RootWindowU::reloadStyleSheet()
+{
+	QFile file;
+	file.setFileName("configs/style.qss");//TODO 此处应该从配置获取，但目前配置键值管理器还未实现
+	if (!file.open(QIODevice::ReadOnly) || file.size()>= 0x100000)//大小大于1MB或打开失败均视作失败
+		return false;
+	this->setStyleSheet(file.readAll());
+	file.close();
+	return true;
 }
 
 void RootWindowU::changePage()
@@ -48,8 +60,8 @@ void RootWindowU::changePage()
 	if (call_page == FUNCPAGES_ENUM::OnlineSearcher)
 	{
 		if (funcPages_pointer.onlineSearcher == NULL)
-			funcPages_pointer.onlineSearcher = new OnlineSearcherU(ui_rw.w_funcWorkspace);
-		funcPages_pointer.onlineSearcher->show();
+			funcPages_pointer.onlineSearcher = new OnlineSearcherC(ui_rw.w_funcWorkspace);
+		funcPages_pointer.onlineSearcher->showWidget();
 	}
 	//TODO 由于页面未完成，此处缺失
 }

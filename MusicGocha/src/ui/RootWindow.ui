@@ -25,10 +25,6 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <property name="styleSheet">
-   <string notr="true">background-color: hsl(210, 50%, 98%);
-font: 10pt &quot;Microsoft YaHei UI&quot;;</string>
-  </property>
   <layout class="QHBoxLayout" name="HL_rootDivide" stretch="1,0">
    <property name="spacing">
     <number>0</number>
@@ -69,54 +65,7 @@ font: 10pt &quot;Microsoft YaHei UI&quot;;</string>
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true">QWidget
-{
-	background-color: hsl(210, 60%, 95%);
-}
-QPushButton
-{
-	color: hsl(0, 0%, 10%);
-	font: 10pt &quot;微软雅黑&quot;;
-	border-style: solid;
-	border-width: 1px, 0px, 0px, 0px;
-	border-radius: 3px;
-	border-color: hsl(210, 5%, 90%);
-	border-right-color: hsl(210, 5%, 100%);
-	border-left-color: hsl(210, 5%, 100%);
-	background-color: hsl(210, 5%, 100%);
-}
-QPushButton:hover
-{
-	color: hsl(0, 0%, 5%);
-	background-color: hsl(210, 10%, 98%);
-}
-QPushButton:pressed
-{
-	color: hsl(0, 0%, 0%);
-	background-color: hsl(210, 15%, 95%);
-}
-QPushButton:checked
-{
-	color: #ffffff;
-	background-color: hsl(210, 100%, 40%);
-}
-QPushButton:checked:hover
-{
-	color: #ffffff;
-	background-color: hsl(210, 80%, 45%);
-}
-QPushButton:checked:pressed
-{
-	color: #ffffff;
-	background-color: hsl(210, 60%, 50%);
-}
-QPushButton:disabled
-{
-	color: hsl(210, 0%, 60%);
-	border-width: 0px;
-	/*border-color: hsl(210, 0%, 85%);*/
-	background-color: hsl(210, 0%, 95%);
-}</string>
+      <string notr="true"/>
      </property>
      <layout class="QVBoxLayout" name="VL_mainMenu">
       <property name="spacing">
@@ -162,7 +111,7 @@ QPushButton:disabled
          </size>
         </property>
         <property name="text">
-         <string>Alp.4</string>
+         <string>Alp.5</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -176,29 +125,6 @@ QPushButton:disabled
           <width>0</width>
           <height>20</height>
          </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QLabel
-{
-	color: #ffffff;
-	background-color: hsl(0, 0%, 40%);
-}
-QLabel[status=&quot;ready&quot;]
-{
-	background-color: hsl(210, 100%, 40%);
-}
-QLabel[status=&quot;working&quot;]
-{
-	background-color: hsl(200, 100%, 40%);
-}
-QLabel[status=&quot;warning&quot;]
-{
-	background-color: hsl(50, 100%, 40%);
-}
-QLabel[status=&quot;fatal&quot;]
-{
-	background-color: hsl(0, 100%, 40%);
-}</string>
         </property>
         <property name="text">
          <string>就绪</string>
@@ -403,251 +329,7 @@ QLabel[status=&quot;fatal&quot;]
    <item>
     <widget class="QWidget" name="w_funcWorkspace" native="true">
      <property name="styleSheet">
-      <string notr="true">/*通用普通按钮*/
-/*Normal Push Button*/
-
-QPushButton
-{
-	color: hsl(0, 0%, 10%);
-	border-style: solid;
-	border-width: 1px;
-	border-radius: 3px;
-	border-color: hsl(210, 5%, 90%);
-	background-color: hsl(210, 5%, 100%);
-}
-QPushButton:hover
-{
-	color: hsl(0, 0%, 5%);
-	border-color: hsl(210, 10%, 88%);
-	background-color: hsl(210, 10%, 98%);
-}
-QPushButton:pressed
-{
-	color: hsl(0, 0%, 0%);
-	border-color: hsl(210, 15%, 85%);
-	background-color: hsl(210, 15%, 95%);
-}
-QPushButton:disabled
-{
-	color: hsl(210, 0%, 60%);
-	border-width: 0px;
-	/*border-color: hsl(210, 0%, 85%);*/
-	background-color: hsl(210, 0%, 95%);
-}
-
-/*通用高亮按钮*/
-/*Highlighted Push Button*/
-
-QPushButton[isHighlighted=true]
-{
-	color: #ffffff;
-	border-style: solid;
-	border-width: 1px;
-	border-radius: 3px;
-	border-color: hsl(210, 100%, 30%);
-	background-color: hsl(210, 100%, 40%);
-}
-QPushButton[isHighlighted=true]:hover
-{
-	border-color: hsl(210, 80%, 35%);
-	background-color: hsl(210, 80%, 45%);
-}
-QPushButton[isHighlighted=true]:pressed
-{
-	border-color: hsl(210, 60%, 40%);
-	background-color: hsl(210, 60%, 50%);
-}
-QPushButton[isHighlighted=true]:disabled
-{
-	color: hsl(210, 0%, 100%);
-	border-width: 0px;
-	/*border-color: hsl(210, 0%, 60%);*/
-	background-color: hsl(210, 0%, 70%);
-}
-
-/*通用行编辑框*/
-/*Line Edit*/
-
-QLineEdit
-{
-	color: hsl(0, 0%, 10%);
-	selection-color: hsl(0, 0%, 100%);
-	border-style: solid;
-	border-width: 1px;
-	border-radius: 3px;
-	border-color: hsl(210, 5%, 90%);
-	background-color: hsl(210, 5%, 100%);
-	selection-background-color: hsl(210, 100%, 40%);
-	padding: 0px 0px 0px 5px;
-}
-QLineEdit:hover
-{
-	color: hsl(0, 0%, 5%);
-	border-color: hsl(210, 10%, 88%);
-	background-color: hsl(210, 10%, 98%);
-}
-QLineEdit:focus
-{
-	border-bottom-color: hsl(210, 100%, 40%);
-}
-QLineEdit:disabled
-{
-	color: hsl(210, 0%, 60%);
-	border-color: hsl(210, 0%, 85%);
-	background-color: hsl(210, 0%, 95%);
-}
-QLineEdit:read-only
-{
-	border-color: hsl(210, 0%, 95%);
-	background-color: hsl(210, 0%, 98%);
-}
-
-/*组合框及其附件*/
-/*Combo box*/
-
-QComboBox
-{
-	color: hsl(0, 0%, 10%);
-	selection-color: hsl(0, 0%, 100%);
-	border-style: solid;
-	border-width: 1px;
-	border-radius: 3px;
-	border-color: hsl(210, 5%, 90%);
-	background-color: hsl(210, 5%, 100%);
-	selection-background-color: hsl(210, 100%, 40%);
-	padding: 0px 0px 0px 5px;
-}
-QComboBox:hover
-{
-	color: hsl(0, 0%, 5%);
-	border-color: hsl(210, 10%, 88%);
-	background-color: hsl(210, 10%, 98%);
-}
-QComboBox:on
-{
-	border-color: hsl(210, 100%, 40%);
-}
-QComboBox:disabled
-{
-	color: hsl(210, 0%, 60%);
-	border-color: hsl(210, 0%, 85%);
-	background-color: hsl(210, 0%, 95%);
-}
-QComboBox::drop-down
-{
-	width: 0px;
-	border: none;
-}
-QComboBox::down-arrow
-{
-	padding: 0px 32px 0px 0px;
-	image: url(:/Resource/icons/drop-arrow-down);
-}
-QComboBox::down-arrow:on
-{
-	image: url(:/Resource/icons/drop-arrow-up);
-}
-QComboBox QAbstractItemView
-{
-	color: hsl(0, 0%, 10%);
-	border-style: solid;
-	border-width: 1px;
-	border-radius: 3px;
-	border-color: hsl(210, 100%, 40%);
-	background-color: hsl(210, 5%, 100%);
-	outline: 0px;
-}
-QComboBox QAbstractItemView::item
-{
-	color: hsl(0, 0%, 10%);
-	border-style: none;
-	background-color: hsl(210, 5%, 100%);
-}
-QComboBox QAbstractItemView::item:hover
-{
-	color: hsl(0, 0%, 5%);
-	background-color: hsl(210, 10%, 98%);
-}
-QComboBox QAbstractItemView::item:selected
-{
-	color: #ffffff;
-	background-color: hsl(210, 100%, 40%);
-}
-
-/*通用页面滑动条*/
-/*Scroll Bar*/
-
-QScrollBar
-{
-    background-color: hsl(210, 5%, 100%);
-    padding: 12px 2px 12px 2px;
-	width: 12px;
-}
-QScrollBar::handle
-{
-    background-color: hsl(210, 5%, 80%);
-    border-radius: 2px; 
-}
-QScrollBar::handle:hover
-{
-    border-color: hsl(210, 10%, 78%);
-}
-QScrollBar::add-line:vertical
-{
-	height:12px;
-	width:12px;
-    border-image:url(:/Resource/icons/drop-arrow-down);
-    subcontrol-position:bottom;
-}
-QScrollBar::sub-line:vertical
-{
-    height:12px;
-	width:12px;
-    image:url(:/Resource/icons/drop-arrow-up);
-    subcontrol-position:top;
-}
-
-/*通用菜单内容*/
-/*Menu &amp; Menu Content*/
-
-QMenu
-{
-	color: hsl(0, 0%, 10%);
-	border-style: solid;
-	border-width: 1px;
-	border-radius: 3px;
-	border-color: hsl(210, 5%, 90%);
-	background-color: hsl(210, 5%, 100%);
-	padding: 5px 5px 5px 5px;
-}
-QMenu::item
-{
-	color: hsl(0, 0%, 10%);
-	border-style: none;
-	border-radius: 3px;
-	background-color: hsl(210, 5%, 100%);
-	padding: 4px 4px 4px 4px;
-}
-QMenu::item:selected
-{
-	color: hsl(0, 0%, 5%);
-	background-color: hsl(210, 10%, 95%);
-}
-/* QMenu::item:selected
-{
-	color: #ffffff;
-	background-color: hsl(210, 100%, 40%);
-} */
-QMenu::item:disabled
-{
-	color: hsl(210, 0%, 60%);
-}
-QMenu::separator
-{
-	height: 1px;
-	background-color: hsl(210, 5%, 80%);
-}
-</string>
+      <string notr="true"/>
      </property>
      <layout class="QGridLayout" name="GL_workspaceSuit">
       <property name="leftMargin">
