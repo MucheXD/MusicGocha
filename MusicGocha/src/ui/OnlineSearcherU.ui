@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>OnlineSearcherW</class>
- <widget class="QWidget" name="OnlineSearcherW">
+ <class>OnlineSearcherU</class>
+ <widget class="QWidget" name="OnlineSearcherU">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -127,7 +127,7 @@
    </item>
    <item>
     <widget class="QWidget" name="w_searchResultZone" native="true">
-     <layout class="QVBoxLayout" name="VL_searchResultZone" stretch="">
+     <layout class="QVBoxLayout" name="VL_searchResultZone">
       <property name="spacing">
        <number>0</number>
       </property>

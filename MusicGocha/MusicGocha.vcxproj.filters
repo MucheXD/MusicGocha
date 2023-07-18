@@ -13,6 +13,9 @@
     <Filter Include="code\RootWindow">
       <UniqueIdentifier>{b637f347-11f7-4279-912d-b72204410284}</UniqueIdentifier>
     </Filter>
+    <Filter Include="configs">
+      <UniqueIdentifier>{16ec6814-1c96-45a5-b0a0-20a6495add34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="docs\devlog.txt">
@@ -29,7 +32,7 @@
     <ClCompile Include="src\code\RootWindow\RootWindow.cpp">
       <Filter>code\RootWindow</Filter>
     </ClCompile>
-    <ClCompile Include="src\code\OnlineSearcher\OnlineSearcherU.cpp">
+    <ClCompile Include="src\code\OnlineSearcher\OnlineSearcherW.cpp">
       <Filter>code\OnlineSearcher</Filter>
     </ClCompile>
     <ClCompile Include="src\code\OnlineSearcher\OnlineSearcherC.cpp">
@@ -40,7 +43,7 @@
     <ClInclude Include="src\code\ControlHub.h">
       <Filter>code</Filter>
     </ClInclude>
-    <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherU.h">
+    <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherW.h">
       <Filter>code\OnlineSearcher</Filter>
     </ClInclude>
     <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherC.h">
@@ -56,8 +59,16 @@
     <QtUic Include="src\ui\RootWindow.ui">
       <Filter>code\RootWindow</Filter>
     </QtUic>
-    <QtUic Include="src\ui\OnlineSearcherW.ui">
+    <QtUic Include="src\ui\OnlineSearcherU.ui">
       <Filter>code\OnlineSearcher</Filter>
     </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="configs\config.mtd">
+      <Filter>configs</Filter>
+    </None>
+    <None Include="configs\style.qss">
+      <Filter>configs</Filter>
+    </None>
   </ItemGroup>
 </Project>

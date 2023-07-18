@@ -1,25 +1,37 @@
 #include "RootWindow.h"
 
-RootWindowU::RootWindowU()
+RootWindow::RootWindow()
 {
 	//创建及初始化必要实例对象
 	ui_rw.setupUi(this);
 
 	//连接tabbar菜单按钮的信号
-	connect(ui_rw.pb_tabbar_onlineSearcher,&QPushButton::clicked,this,&RootWindowU::changePage);
-	connect(ui_rw.pb_tabbar_localCollector, &QPushButton::clicked, this, &RootWindowU::changePage);
-	connect(ui_rw.pb_tabbar_itemCart, &QPushButton::clicked, this, &RootWindowU::changePage);
-	connect(ui_rw.pb_tabbar_workQueue, &QPushButton::clicked, this, &RootWindowU::changePage);
-	connect(ui_rw.pb_tabbar_options, &QPushButton::clicked, this, &RootWindowU::changePage);
+	connect(ui_rw.pb_tabbar_onlineSearcher,&QPushButton::clicked,this,&RootWindow::changePage);
+	connect(ui_rw.pb_tabbar_localCollector, &QPushButton::clicked, this, &RootWindow::changePage);
+	connect(ui_rw.pb_tabbar_itemCart, &QPushButton::clicked, this, &RootWindow::changePage);
+	connect(ui_rw.pb_tabbar_workQueue, &QPushButton::clicked, this, &RootWindow::changePage);
+	connect(ui_rw.pb_tabbar_options, &QPushButton::clicked, this, &RootWindow::changePage);
 
 	//设置首页默认为OnlineSearcher
 	ui_rw.pb_tabbar_onlineSearcher->setChecked(true);
 	changePage();
 
+	reloadStyleSheet();
 	this->show();
 }
 
-void RootWindowU::changePage()
+bool RootWindow::reloadStyleSheet()
+{
+	QFile file;
+	file.setFileName("configs/style.qss");//TODO 此处应该从配置获取，但目前配置键值管理器还未实现
+	if (!file.open(QIODevice::ReadOnly) || file.size()>= 0x100000)//大小大于1MB或打开失败均视作失败
+		return false;
+	this->setStyleSheet(file.readAll());
+	file.close();
+	return true;
+}
+
+void RootWindow::changePage()
 {
 	FUNCPAGES_ENUM call_page = OnlineSearcher;//默认为OnlineSearcher，除非程序BUG否则用不到
 	//获取当前选择页面
@@ -48,8 +60,8 @@ void RootWindowU::changePage()
 	if (call_page == FUNCPAGES_ENUM::OnlineSearcher)
 	{
 		if (funcPages_pointer.onlineSearcher == NULL)
-			funcPages_pointer.onlineSearcher = new OnlineSearcherU(ui_rw.w_funcWorkspace);
-		funcPages_pointer.onlineSearcher->show();
+			funcPages_pointer.onlineSearcher = new OnlineSearcherC(ui_rw.w_funcWorkspace);
+		funcPages_pointer.onlineSearcher->showWidget();
 	}
 	//TODO 由于页面未完成，此处缺失
 }

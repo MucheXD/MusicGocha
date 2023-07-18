@@ -3,6 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# config files
+*.mtd
+*.mbd
+
 # User-specific files
 *.rsuser
 *.suo
@@ -361,3 +365,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/MusicGocha/configs/config.mtd
+/MusicGocha/configs/config.mtd
+/MusicGocha/configs/config.mtd

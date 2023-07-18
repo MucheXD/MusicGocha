@@ -1,8 +1,9 @@
 #pragma once
 #include <QWidget>
+#include <QFile>
 #include "ui_RootWindow.h"
 
-#include "../OnlineSearcher/OnlineSearcherU.h"
+#include "../OnlineSearcher/OnlineSearcherC.h"
 
 enum FUNCPAGES_ENUM
 {
@@ -17,18 +18,19 @@ enum FUNCPAGES_ENUM
 struct FUNCPAGES_POINTER
 {
 	FUNCPAGES_ENUM currentFuncPage = FUNCPAGES_ENUM::NULLPAGE;
-	OnlineSearcherU* onlineSearcher = NULL;
+	OnlineSearcherC* onlineSearcher = NULL;
 };
 
-class RootWindowU : public QWidget
+class RootWindow : public QWidget
 {
 	Q_OBJECT
 
 public:
-	RootWindowU();
+	RootWindow();
 
 private:
-	Ui::RootWindowW ui_rw;
+	Ui::RootWindowU ui_rw;
 	FUNCPAGES_POINTER funcPages_pointer;
+	bool reloadStyleSheet();
 	void changePage();
 };
