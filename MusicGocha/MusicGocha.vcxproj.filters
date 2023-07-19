@@ -16,6 +16,9 @@
     <Filter Include="configs">
       <UniqueIdentifier>{16ec6814-1c96-45a5-b0a0-20a6495add34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="code\ConfigManager">
+      <UniqueIdentifier>{f109db95-f7c5-4bda-b17d-9827c2453c34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="docs\devlog.txt">
@@ -38,6 +41,12 @@
     <ClCompile Include="src\code\OnlineSearcher\OnlineSearcherC.cpp">
       <Filter>code\OnlineSearcher</Filter>
     </ClCompile>
+    <ClCompile Include="src\code\basics.cpp">
+      <Filter>code</Filter>
+    </ClCompile>
+    <ClCompile Include="src\code\ConfigManager\ConfigManager.cpp">
+      <Filter>code\ConfigManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\code\ControlHub.h">
@@ -48,6 +57,12 @@
     </ClInclude>
     <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherC.h">
       <Filter>code\OnlineSearcher</Filter>
+    </ClInclude>
+    <ClInclude Include="src\code\basics.h">
+      <Filter>code</Filter>
+    </ClInclude>
+    <ClInclude Include="src\code\ConfigManager\ConfigManager.h">
+      <Filter>code\ConfigManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

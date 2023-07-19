@@ -1,11 +1,11 @@
 #pragma once
 #include <QWidget>
-#include <QFile>
+#include "../basics.h"
 #include "ui_RootWindow.h"
 
 #include "../OnlineSearcher/OnlineSearcherC.h"
 
-enum FUNCPAGES_ENUM
+enum FuncpagesENUM
 {
 	NULLPAGE = 0,
 	OnlineSearcher = 1,
@@ -15,9 +15,9 @@ enum FUNCPAGES_ENUM
 	Options = 5,
 };
 
-struct FUNCPAGES_POINTER
+struct FuncpagesPointer
 {
-	FUNCPAGES_ENUM currentFuncPage = FUNCPAGES_ENUM::NULLPAGE;
+	FuncpagesENUM currentFuncPage = FuncpagesENUM::NULLPAGE;
 	OnlineSearcherC* onlineSearcher = NULL;
 };
 
@@ -30,7 +30,7 @@ public:
 
 private:
 	Ui::RootWindowU ui_rw;
-	FUNCPAGES_POINTER funcPages_pointer;
+	FuncpagesPointer funcPages_pointer;
 	bool reloadStyleSheet();
 	void changePage();
 };

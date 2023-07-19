@@ -120,6 +120,8 @@
     <Text Include="docs\devlog.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\code\basics.cpp" />
+    <ClCompile Include="src\code\ConfigManager\ConfigManager.cpp" />
     <ClCompile Include="src\code\ControlHub.cpp" />
     <ClCompile Include="src\code\main.cpp" />
     <ClCompile Include="src\code\OnlineSearcher\OnlineSearcherC.cpp" />
@@ -127,6 +129,8 @@
     <ClCompile Include="src\code\RootWindow\RootWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\code\basics.h" />
+    <ClInclude Include="src\code\ConfigManager\ConfigManager.h" />
     <ClInclude Include="src\code\ControlHub.h" />
     <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherC.h" />
     <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherW.h" />

@@ -33,31 +33,30 @@ bool RootWindow::reloadStyleSheet()
 
 void RootWindow::changePage()
 {
-	FUNCPAGES_ENUM call_page = OnlineSearcher;//默认为OnlineSearcher，除非程序BUG否则用不到
+	FuncpagesENUM call_page = OnlineSearcher;//默认为OnlineSearcher，除非程序BUG否则用不到
 	//获取当前选择页面
 	if (ui_rw.pb_tabbar_onlineSearcher->isChecked())
-		call_page = FUNCPAGES_ENUM::OnlineSearcher;
+		call_page = FuncpagesENUM::OnlineSearcher;
 	else if (ui_rw.pb_tabbar_localCollector->isChecked())
-		call_page = FUNCPAGES_ENUM::LocalCollector;
+		call_page = FuncpagesENUM::LocalCollector;
 	else if (ui_rw.pb_tabbar_itemCart->isChecked())
-		call_page = FUNCPAGES_ENUM::ItemCart;
+		call_page = FuncpagesENUM::ItemCart;
 	else if (ui_rw.pb_tabbar_workQueue->isChecked())
-		call_page = FUNCPAGES_ENUM::WorkQueue;
+		call_page = FuncpagesENUM::WorkQueue;
 	else if (ui_rw.pb_tabbar_options->isChecked())
-		call_page = FUNCPAGES_ENUM::Options;
+		call_page = FuncpagesENUM::Options;
 	//如果页面不变则直接返回
-	if (!funcPages_pointer.currentFuncPage == FUNCPAGES_ENUM::NULLPAGE)
+	if (!funcPages_pointer.currentFuncPage == FuncpagesENUM::NULLPAGE)
 		if (call_page == funcPages_pointer.currentFuncPage)
 			return;
 	//向不是将调用的页面发送删除请求，是否执行内存释放由对应类自行判断
-	//TODO 这里代码未来的重复率太高了，或许可以改成模板形式
-	if (call_page != FUNCPAGES_ENUM::OnlineSearcher && funcPages_pointer.onlineSearcher != NULL)
+	if (call_page != FuncpagesENUM::OnlineSearcher && funcPages_pointer.onlineSearcher != NULL)
 		if (funcPages_pointer.onlineSearcher->tryDelete())
 			funcPages_pointer.onlineSearcher = NULL;
 	//TODO 由于页面未完成，此处缺失
 	
 	//调用页面
-	if (call_page == FUNCPAGES_ENUM::OnlineSearcher)
+	if (call_page == FuncpagesENUM::OnlineSearcher)
 	{
 		if (funcPages_pointer.onlineSearcher == NULL)
 			funcPages_pointer.onlineSearcher = new OnlineSearcherC(ui_rw.w_funcWorkspace);
