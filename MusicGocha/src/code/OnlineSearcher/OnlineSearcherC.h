@@ -1,5 +1,6 @@
 #pragma once
 #include "OnlineSearcherW.h"
+#include "../widgets/DialogBox.h"
 
 class OnlineSearcherC
 {

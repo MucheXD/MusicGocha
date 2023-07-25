@@ -10,5 +10,7 @@ OnlineSearcherW::OnlineSearcherW()
 
 void OnlineSearcherW::startSearching()
 {
-	qDebug() << QApplication::applicationDirPath();
+	//TODO 业务逻辑<OnlineSearch>从此开始
+	DialogBox::popMessageBox(this, "这个功能未完成", "程序无法继续执行，关键进程已退出", DialogBox::icon_critical
+		, DialogBox::btn_abort, true);
 }

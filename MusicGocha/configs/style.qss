@@ -18,6 +18,7 @@ QPushButton
 	border-radius: 3px;
 	border-color: hsl(210, 5%, 90%);
 	background-color: hsl(210, 5%, 100%);
+	padding: 4px 10px 4px 10px;
 }
 QPushButton:hover
 {
@@ -323,4 +324,51 @@ QWidget#w_mainMenu>QLabel#lb_progStatus[status="warning"]
 QWidget#w_mainMenu>QLabel#lb_progStatus[status="fatal"]
 {
 	background-color: hsl(0, 100%, 40%);
+}
+
+/*自定义的DialogBox特殊样式*/
+/*special style under "DialogBoxU"*/
+
+QDialog#DialogBoxU
+{
+	background-color: hsl(210, 50%, 98%);
+	font: 12pt bold "Microsoft YaHei UI";
+}
+QDialog#DialogBoxU>QWidget#title QLabel
+{
+	background-color: hsl(210, 50%, 95%);
+	font: 700 16pt "Microsoft YaHei UI";
+}
+QDialog#DialogBoxU>QWidget#title>QLabel#title_icon
+{
+	padding: 0px 2px 0px 5px;
+}
+QDialog#DialogBoxU>QWidget#title>QLabel#title_icon[icon=info_blue]
+{
+	image: url(:/icons/info_blue);
+}
+QDialog#DialogBoxU>QWidget#title>QLabel#title_icon[icon=warning_yellow]
+{
+	image: url(:/icons/warning_yellow);
+}
+QDialog#DialogBoxU>QWidget#title>QLabel#title_icon[icon=warning_red]
+{
+	image: url(:/icons/warning_red);
+}
+QDialog#DialogBoxU>QWidget#title>QLabel#title_icon[icon=error_red]
+{
+	image: url(:/icons/error_red);
+}
+QDialog#DialogBoxU>QWidget#title>QLabel#title_icon[icon=settings_blue]
+{
+	image: url(:/icons/settings_blue);
+}
+QDialog#DialogBoxU>QWidget#title>QLabel#title_icon[icon=critical]
+{
+	image: url(:/icons/critical);
+}
+QDialog#DialogBoxU>QLabel#content
+{
+	font: 12pt "Microsoft YaHei UI";
+	padding: 10px 10px 10px 10px;
 }

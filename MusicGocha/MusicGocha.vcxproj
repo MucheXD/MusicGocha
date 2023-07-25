@@ -127,6 +127,7 @@
     <ClCompile Include="src\code\OnlineSearcher\OnlineSearcherC.cpp" />
     <ClCompile Include="src\code\OnlineSearcher\OnlineSearcherW.cpp" />
     <ClCompile Include="src\code\RootWindow\RootWindow.cpp" />
+    <ClCompile Include="src\code\widgets\DialogBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\code\basics.h" />
@@ -134,15 +135,20 @@
     <ClInclude Include="src\code\ControlHub.h" />
     <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherC.h" />
     <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherW.h" />
+    <ClInclude Include="src\code\widgets\DialogBox.h" />
     <QtMoc Include="src\code\RootWindow\RootWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="src\ui\DialogBox.ui" />
     <QtUic Include="src\ui\OnlineSearcherU.ui" />
     <QtUic Include="src\ui\RootWindow.ui" />
   </ItemGroup>
   <ItemGroup>
     <None Include="configs\config.mtd" />
     <None Include="configs\style.qss" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="res\MUG.qrc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

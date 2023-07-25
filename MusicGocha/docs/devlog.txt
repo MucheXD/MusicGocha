@@ -26,3 +26,14 @@ Alp.5 2023/07/18
 Alp.6 2023/07/19
 + 添加了ConfigManager用于负责配置的读写
 + 初步完成了配置读写逻辑
+
+Alp.7 2023/07/24
++ 添加了DialogBox作为程序默认的对话框类
++ 完成了DialogBox的唤醒逻辑
++ 现在DialogBox可以以模态对话框的形式正确弹出，且阻塞原消息循环
+
+Alp.8 2023/07/25
++ 绘制DialogBox的UI，合并DialogBox的StyleSheet
++ 为DialogBox添加图标，新增资源自述MUG.qrc
++ 程序建立了icons资源文件夹，感谢iconfront提供部分资源:)
++ 现在可以通过静态函数直接调用弹窗，调用更加简便

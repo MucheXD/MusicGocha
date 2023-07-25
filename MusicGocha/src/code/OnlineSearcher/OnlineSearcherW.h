@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ui_OnlineSearcherU.h"
+#include "../widgets/DialogBox.h"
 
 class OnlineSearcherW : public QWidget
 {

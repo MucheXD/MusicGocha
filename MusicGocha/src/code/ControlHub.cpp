@@ -3,6 +3,7 @@
 ControlHubCore::ControlHubCore()
 {
 	rootWindow = NULL;
+	//DEBUG  配置测试
 	qDebug() << configManager.saveConfig();
 }
 
