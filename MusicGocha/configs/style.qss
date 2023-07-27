@@ -334,6 +334,10 @@ QDialog#DialogBoxU
 	background-color: hsl(210, 50%, 98%);
 	font: 12pt bold "Microsoft YaHei UI";
 }
+QDialog#DialogBoxU>QWidget#title
+{
+	background-color: hsl(210, 50%, 95%);
+}
 QDialog#DialogBoxU>QWidget#title QLabel
 {
 	background-color: hsl(210, 50%, 95%);

@@ -61,6 +61,7 @@ void RootWindow::changePage()
 		if (funcPages_pointer.onlineSearcher == NULL)
 			funcPages_pointer.onlineSearcher = new OnlineSearcherC(ui_rw.w_funcWorkspace);
 		funcPages_pointer.onlineSearcher->showWidget();
+		ui_rw.GL_workspaceSuit->addWidget(funcPages_pointer.onlineSearcher->getWidgetPointer());
 	}
 	//TODO 由于页面未完成，此处缺失
 }

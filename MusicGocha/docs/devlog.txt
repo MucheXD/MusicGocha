@@ -37,3 +37,7 @@ Alp.8 2023/07/25
 + 为DialogBox添加图标，新增资源自述MUG.qrc
 + 程序建立了icons资源文件夹，感谢iconfront提供部分资源:)
 + 现在可以通过静态函数直接调用弹窗，调用更加简便
+
+Alp.9 2023/07/27
++ 修改DialogBox的逻辑，简化代码流程
++ 修复funcpage不能根据RootWindow大小自适应的问题

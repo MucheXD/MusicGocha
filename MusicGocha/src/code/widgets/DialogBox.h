@@ -7,15 +7,17 @@ class DialogBox : public QDialog
 {
 public:
 
+	//可用的图标
 	enum DialogBoxIconENUM
 	{
-		icon_none = 0b00000000,
-		icon_information = 0b00010000,
-		icon_question = 0b00010001,
-		icon_warning = 0b00100000,
-		icon_warning_critical = 0b00100001,
-		icon_error = 0b00110000,
-		icon_critical = 0b01000000
+		icon_none,
+		icon_information,
+		icon_question,
+		icon_warning,
+		icon_warning_critical,
+		icon_error,
+		icon_critical,
+		icon_settings
 	};
 	
 	//预定义的按钮
@@ -34,20 +36,18 @@ public:
 
 	DialogBox(QWidget* parent);
 	~DialogBox();
-	void showMessageBox(QString title, QString text
-		, DialogBoxIconENUM icon = DialogBoxIconENUM::icon_none
-		, uint16_t btn = DialogBoxButtonENUM::btn_none
-		, bool buttonAutoHighlighted = true, bool disableCloseButton = false);
 	static int popMessageBox(QWidget* parent, QString title, QString text
 		, DialogBoxIconENUM icon = DialogBoxIconENUM::icon_none
 		, uint16_t btn = DialogBoxButtonENUM::btn_none
 		, bool buttonAutoHighlighted = true, bool disableCloseButton = false);
 	
 private:
-	void buildDialogBoxBody(QString title, QString text
-		, DialogBoxIconENUM icon = DialogBoxIconENUM::icon_none);
+	void buildDialogBoxBody(QString title, QString content
+		, DialogBoxIconENUM icon = DialogBoxIconENUM::icon_none, bool contentInMarkdown = false);
 	void buildDialogBoxButton(uint16_t btn = DialogBoxButtonENUM::btn_none
 		, bool buttonAutoHighlighted = true, bool disableCloseButton = false);
+	void setIcon(DialogBoxIconENUM icon);//设置默认的图标
+	void setIcon(QUrl iconUrl);//设置资源文件中的图标
 	QPushButton* createButton(QString text, int returnId = -1, bool isHighlighted = false);
 	QPushButton* addButtonToInputs(QPushButton* btn);
 	void reLayoutInputs();
