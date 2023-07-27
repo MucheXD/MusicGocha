@@ -15,3 +15,7 @@ bool OnlineSearcherC::tryDelete()
 	widget_os->deleteLater();
 	return true;
 }
+QWidget* OnlineSearcherC::getWidgetPointer()
+{
+	return widget_os;
+}
