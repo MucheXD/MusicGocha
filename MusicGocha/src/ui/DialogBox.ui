@@ -26,6 +26,31 @@
    <iconset resource="../../res/MUG.qrc">
     <normaloff>:/icons/empty</normaloff>:/icons/empty</iconset>
   </property>
+  <property name="styleSheet">
+   <string notr="true">
+/*DialogBox预启动样式*/
+/*&quot;DialogBoxU&quot; in prestart*/
+
+QDialog#DialogBoxU
+{
+	background-color: hsl(210, 50%, 98%);
+	font: 12pt bold &quot;Microsoft YaHei UI&quot;;
+}
+QDialog#DialogBoxU&gt;QWidget#title
+{
+	background-color: hsl(210, 50%, 95%);
+}
+QDialog#DialogBoxU&gt;QWidget#title QLabel
+{
+	background-color: hsl(210, 50%, 95%);
+	font: 700 16pt &quot;Microsoft YaHei UI&quot;;
+}
+QDialog#DialogBoxU&gt;QLabel#content
+{
+	font: 12pt &quot;Microsoft YaHei UI&quot;;
+	padding: 10px 10px 10px 10px;
+}</string>
+  </property>
   <property name="modal">
    <bool>true</bool>
   </property>

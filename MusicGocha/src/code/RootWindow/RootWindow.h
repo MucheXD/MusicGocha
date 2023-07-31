@@ -24,13 +24,12 @@ struct FuncpagesPointer
 class RootWindow : public QWidget
 {
 	Q_OBJECT
-
 public:
 	RootWindow();
-
 private:
 	Ui::RootWindowU ui_rw;
 	FuncpagesPointer funcPages_pointer;
-	bool reloadStyleSheet();
 	void changePage();
+signals:
+	QVariant _fetchConfigValue(QString key);
 };

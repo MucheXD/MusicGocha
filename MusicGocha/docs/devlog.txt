@@ -42,3 +42,15 @@ Alp.9 2023/07/27
 + 修改DialogBox的逻辑，简化代码流程
 + 修复funcpage不能根据RootWindow大小自适应的问题
 + 删除了位于DialogBox.ui中的测试字段
+
+Alp.10 2023/07/30
++ 现在当程序启动并找不到配置文件时显示欢迎窗口
++ 现在程序会对配置错误和样式丢失发出警告
++ 为DialogBox.ui内置了预启动样式，避免当样式丢失时DialogBox无法显示
++ 修改了ConfigManager的逻辑，不再采用结构化数据
+
+Alp.11 2023/07/31
++ 修复了无法从本地读取配置的问题
++ 修改ConfigManager的结构，避免了枚举的发生
++ 现在程序可以为空配置项预定义默认值
++ 增加了FuncPages向ControlHub请求配置时的逻辑

@@ -7,27 +7,39 @@
 class ConfigManager
 {
 public:
+	enum ErrorList
+	{
+		no_error = 0,
+		file_not_exist,
+		cannot_open_file,
+		illegal_config,
+		manifest_mismatching,
+		version_incompatible,
+		illegal_data
+	};
+
 	ConfigManager();
 	void setConfigFileName(QString fileName);
-	bool loadConfig();
+	ErrorList loadConfig();
 	bool saveConfig(bool needBuildNew = false);
 	QVariant getConfigValue(QString key);
+	void setConfigValue(QString key, QVariant value);
+	QVariant getDefaultValue(QString key);
+	void fillDefaultValue();
 
 private:
 
-	struct ConfigDisplay
+	struct ConfigElement
 	{
-		QString styleSheetFileName = "";
+		QString key = "";
+		QVariant value = NULL;
 	};
-	struct ConfigList
-	{
-		ConfigDisplay display;
-	};
-
-
-	QString configFileName;
-	ConfigList configs;
 
 	QJsonDocument buildJsonConfig();
-	bool writeConfigToFile(QJsonDocument data_jsonDoc);
+	std::vector<ConfigElement> parseJsonConfig(QJsonObject obj_root);
+
+	QString configFileName;
+	ErrorList error;
+	std::vector<ConfigElement> configs;
+	std::vector<ConfigElement> defaultConfigValues;
 };

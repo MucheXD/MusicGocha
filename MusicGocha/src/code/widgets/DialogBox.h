@@ -23,15 +23,17 @@ public:
 	//预定义的按钮
 	enum DialogBoxButtonENUM : uint16_t
 	{
-		btn_none = 0b00000000,
-		btn_ok = 0b00000001,
-		btn_cancel = 0b00000010,
-		btn_defalt = 0b00000100,
-		btn_confirm = 0b00001000,
-		btn_no = 0b00010000,
-		btn_yes = 0b00100000,
-		btn_retry = 0b01000000,
-		btn_abort = 0b10000000
+		btn_none = 0,
+		btn_ok = 1,
+		btn_cancel = 2,
+		btn_confirm = 4,
+		btn_no = 8,
+		btn_yes = 16,
+		btn_retry = 32,
+		btn_abort = 64,
+		btn_continue = 128,
+		btn_defalt = 256,
+		btn_custom = 512,
 	};
 
 	DialogBox(QWidget* parent);
@@ -39,7 +41,8 @@ public:
 	static int popMessageBox(QWidget* parent, QString title, QString text
 		, DialogBoxIconENUM icon = DialogBoxIconENUM::icon_none
 		, uint16_t btn = DialogBoxButtonENUM::btn_none
-		, bool buttonAutoHighlighted = true, bool disableCloseButton = false);
+		, bool buttonAutoHighlighted = true, bool disableCloseButton = false
+		, QString styleSheet = "");
 	
 private:
 	void buildDialogBoxBody(QString title, QString content

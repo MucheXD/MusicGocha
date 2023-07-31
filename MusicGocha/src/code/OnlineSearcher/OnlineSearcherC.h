@@ -2,8 +2,9 @@
 #include "OnlineSearcherW.h"
 #include "../widgets/DialogBox.h"
 
-class OnlineSearcherC
+class OnlineSearcherC : public QObject
 {
+	Q_OBJECT
 public:
 	OnlineSearcherC(QWidget* parent);
 	void showWidget();
@@ -11,4 +12,6 @@ public:
 	QWidget* getWidgetPointer();
 private:
 	OnlineSearcherW* widget_os;
+signals:
+	QVariant _fetchConfigValue(QString key);
 };

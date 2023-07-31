@@ -19,3 +19,4 @@ QWidget* OnlineSearcherC::getWidgetPointer()
 {
 	return widget_os;
 }
+
