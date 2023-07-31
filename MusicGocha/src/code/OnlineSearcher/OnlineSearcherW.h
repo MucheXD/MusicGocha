@@ -11,4 +11,6 @@ private:
 	Ui::OnlineSearcherU ui_os;
 	void startSearching();
 	//void tryReleaseMemory();
+signals:
+	void _startSearching();
 };

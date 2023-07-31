@@ -3,9 +3,12 @@
 //弹出一个消息框
 int DialogBox::popMessageBox(QWidget* parent, QString title, QString text
 	, DialogBoxIconENUM icon
-	, uint16_t btn, bool buttonAutoHighlighted, bool disableCloseButton)
+	, uint16_t btn, bool buttonAutoHighlighted, bool disableCloseButton
+	, QString styleSheet)
 {
 	DialogBox dialogBox(parent);
+	if (styleSheet != "")
+		dialogBox.setStyleSheet(styleSheet);
 	dialogBox.buildDialogBoxBody(title, text, icon);
 	dialogBox.buildDialogBoxButton(btn, buttonAutoHighlighted, disableCloseButton);
 	return dialogBox.exec();
@@ -49,12 +52,13 @@ if (needed & enumId)\
 	{
 		CREATE_PREDEFINED_BUTTON_IFNEEDED(btn, "了解", DialogBoxButtonENUM::btn_ok);
 		CREATE_PREDEFINED_BUTTON_IFNEEDED(btn, "取消", DialogBoxButtonENUM::btn_cancel);
-		CREATE_PREDEFINED_BUTTON_IFNEEDED(btn, "置默认值", DialogBoxButtonENUM::btn_defalt);
 		CREATE_PREDEFINED_BUTTON_IFNEEDED(btn, "确认", DialogBoxButtonENUM::btn_confirm);
 		CREATE_PREDEFINED_BUTTON_IFNEEDED(btn, "是", DialogBoxButtonENUM::btn_yes);
 		CREATE_PREDEFINED_BUTTON_IFNEEDED(btn, "否", DialogBoxButtonENUM::btn_no);
 		CREATE_PREDEFINED_BUTTON_IFNEEDED(btn, "重试", DialogBoxButtonENUM::btn_retry);
 		CREATE_PREDEFINED_BUTTON_IFNEEDED(btn, "终止", DialogBoxButtonENUM::btn_abort);
+		CREATE_PREDEFINED_BUTTON_IFNEEDED(btn, "使用默认", DialogBoxButtonENUM::btn_defalt);
+		CREATE_PREDEFINED_BUTTON_IFNEEDED(btn, "自定义", DialogBoxButtonENUM::btn_custom);
 		/*if ((btn & DialogBoxButtonENUM::btn_ok) == DialogBoxButtonENUM::btn_ok)
 			connect(addButtonToInputs(createButton("了解", DialogBoxButtonENUM::btn_ok)),
 				&QPushButton::clicked, this, &DialogBox::predefinedButtonClicked);

@@ -64,9 +64,6 @@
     <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherW.h">
       <Filter>code\OnlineSearcher</Filter>
     </ClInclude>
-    <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherC.h">
-      <Filter>code\OnlineSearcher</Filter>
-    </ClInclude>
     <ClInclude Include="src\code\basics.h">
       <Filter>code</Filter>
     </ClInclude>
@@ -80,6 +77,9 @@
   <ItemGroup>
     <QtMoc Include="src\code\RootWindow\RootWindow.h">
       <Filter>code\RootWindow</Filter>
+    </QtMoc>
+    <QtMoc Include="src\code\OnlineSearcher\OnlineSearcherC.h">
+      <Filter>code\OnlineSearcher</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

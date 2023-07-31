@@ -133,7 +133,7 @@
     <ClInclude Include="src\code\basics.h" />
     <ClInclude Include="src\code\ConfigManager\ConfigManager.h" />
     <ClInclude Include="src\code\ControlHub.h" />
-    <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherC.h" />
+    <QtMoc Include="src\code\OnlineSearcher\OnlineSearcherC.h" />
     <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherW.h" />
     <ClInclude Include="src\code\widgets\DialogBox.h" />
     <QtMoc Include="src\code\RootWindow\RootWindow.h" />
