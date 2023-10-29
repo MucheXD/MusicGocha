@@ -10,7 +10,8 @@ OnlineSearcherW::OnlineSearcherW()
 
 void OnlineSearcherW::startSearching()
 {
-	//TODO 业务逻辑<OnlineSearch>从此开始
+	ui_os.pb_startSearching->setEnabled(false);
+	emit _startSearching(ui_os.edit_searchInput->text());
 	
 	
 }

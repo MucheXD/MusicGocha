@@ -12,5 +12,5 @@ private:
 	void startSearching();
 	//void tryReleaseMemory();
 signals:
-	void _startSearching();
+	void _startSearching(QString keyword, QString mode, int16_t page);
 };
