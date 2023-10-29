@@ -117,6 +117,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="docs\config_key.txt" />
     <Text Include="docs\devlog.txt" />
   </ItemGroup>
   <ItemGroup>

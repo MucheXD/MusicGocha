@@ -1,0 +1,3 @@
+work.online_search.script 在线搜索引擎脚本文件列表
+
+debug.test 测试键，写死 "DEBUGMESSAGE"

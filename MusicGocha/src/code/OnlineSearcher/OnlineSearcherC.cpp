@@ -3,6 +3,7 @@ OnlineSearcherC::OnlineSearcherC(QWidget* parent)
 {
 	widget_os = new OnlineSearcherW;
 	widget_os->setParent(parent);
+	connect(widget_os, &OnlineSearcherW::_startSearching, this, &OnlineSearcherC::startSearching);
 }
 void OnlineSearcherC::showWidget()
 {
@@ -19,4 +20,18 @@ QWidget* OnlineSearcherC::getWidgetPointer()
 {
 	return widget_os;
 }
+void OnlineSearcherC::startSearching()
+{
+	QStringList scriptList = emit _fetchConfigValue("work.online_search.script").toStringList();
+	
+}
 
+OnlineSearchEngine::OnlineSearchEngine(QString scriptData)
+{
+
+}
+
+std::vector<MusicInfo> OnlineSearchEngine::getSearchResult()
+{
+
+}

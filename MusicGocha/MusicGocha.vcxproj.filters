@@ -30,6 +30,9 @@
     <Text Include="docs\devlog.txt">
       <Filter>Documents</Filter>
     </Text>
+    <Text Include="docs\config_key.txt">
+      <Filter>Documents</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\code\ControlHub.cpp">
