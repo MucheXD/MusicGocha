@@ -5,6 +5,9 @@
 
 class OnlineSearcherW : public QWidget
 {
+
+Q_OBJECT
+
 public:
 	OnlineSearcherW();
 private:
@@ -12,5 +15,5 @@ private:
 	void startSearching();
 	//void tryReleaseMemory();
 signals:
-	void _startSearching(QString keyword, QString mode, int16_t page);
+	void _startSearching(QString keyword, int16_t mode_id);
 };

@@ -30,6 +30,8 @@ private:
 	Ui::RootWindowU ui_rw;
 	FuncpagesPointer funcPages_pointer;
 	void changePage();
+	QVariant pushRequest_fetchConfigValue(QString key);
+
 signals:
 	QVariant _fetchConfigValue(QString key);
 };

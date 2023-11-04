@@ -59,13 +59,13 @@
     <ClCompile Include="src\code\widgets\DialogBox.cpp">
       <Filter>code\widgets</Filter>
     </ClCompile>
+    <ClCompile Include="src\code\OnlineSearcher\OnlineSearchEngine.cpp">
+      <Filter>code\OnlineSearcher</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\code\ControlHub.h">
       <Filter>code</Filter>
-    </ClInclude>
-    <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherW.h">
-      <Filter>code\OnlineSearcher</Filter>
     </ClInclude>
     <ClInclude Include="src\code\basics.h">
       <Filter>code</Filter>
@@ -76,12 +76,18 @@
     <ClInclude Include="src\code\widgets\DialogBox.h">
       <Filter>code\widgets</Filter>
     </ClInclude>
+    <ClInclude Include="src\code\OnlineSearcher\OnlineSearchEngine.h">
+      <Filter>code\OnlineSearcher</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\code\RootWindow\RootWindow.h">
       <Filter>code\RootWindow</Filter>
     </QtMoc>
     <QtMoc Include="src\code\OnlineSearcher\OnlineSearcherC.h">
+      <Filter>code\OnlineSearcher</Filter>
+    </QtMoc>
+    <QtMoc Include="src\code\OnlineSearcher\OnlineSearcherW.h">
       <Filter>code\OnlineSearcher</Filter>
     </QtMoc>
   </ItemGroup>
