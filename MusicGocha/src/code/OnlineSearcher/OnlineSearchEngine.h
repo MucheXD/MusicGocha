@@ -29,7 +29,7 @@ struct DownloadInfo
 	int32_t size = -1;
 	QString url{};
 };
-struct MVINFO
+struct MvInfo
 {
 	QString id{};
 	QString title{};
@@ -68,6 +68,7 @@ struct MusicInfo
 	AlbumInfo ablum;
 	LyricInfo lyrics;
 	OnlineImageInfo cover;
+	MvInfo mv;
 	std::vector<AritstInfo> artists;
 	std::vector<DownloadInfo> downloads;
 
@@ -95,13 +96,46 @@ struct OnlineSearcherScript
 		bool lyricDownload = false;
 		bool multipleLyric = false;
 	}ability;
+
 	struct SearchMethod
 	{
 		QString id{};
 		QString name{};
-		QString script_id{};
+		QString scriptId{};
 	};
 	std::vector<SearchMethod> searchingMethods;
+
+	struct Script
+	{
+		QString id{};
+		QString url{};
+		struct
+		{
+			QString keyword{};
+			QString pageSize{};
+			QString page{};
+			QString method{};
+		}arguments;
+		struct
+		{
+			QString successCheckKey = {};
+			QString successFlag = {};
+			QString errorMsg = {};
+		}responseCheck;
+		struct
+		{
+			QString parserId = {};
+			QString key = {};
+		}content;
+	};
+	std::vector<Script> subScripts;
+
+	struct Parser
+	{
+		QString id{};
+		QString buildTarget{};
+		MusicInfo data{}; //如果buildTarget是MusicInfo的子信息，则忽略MusicInfo其它信息
+	};
 	struct
 	{
 		QString title;
@@ -124,5 +158,10 @@ public:
 	std::vector<MusicInfo> getSearchResult();
 private:
 	OnlineSearcherScript script;
-	
+	bool buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, MusicInfo* target);
+	bool buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, AlbumInfo* target);
+	bool buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, MvInfo* target);
+	bool buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, AritstInfo* target);
+	bool buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, LyricInfo* target);
+	bool buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, DownloadInfo* target);
 };
