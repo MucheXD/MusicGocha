@@ -50,28 +50,6 @@ SEARCHENGINERET OnlineSearchEngine::loadScript(QByteArray scriptData)
 		script.searchingMethods.push_back(newMethod);
 	}
 	//解析脚本部分
-<<<<<<< Updated upstream
-	data_nArray = data_root.value("scripts").toArray();
-	for (auto n : data_nArray)
-	{
-		OnlineSearcherScript::Script newSubScript;
-		QJsonObject nObj = n.toObject();
-		newSubScript.id = nObj.value("id").toString();
-		newSubScript.url = nObj.value("url").toString();
-		nObj = nObj.value("arguments").toObject();
-		newSubScript.arguments.keyword = nObj.value("keyword").toString();
-		newSubScript.arguments.method = nObj.value("method").toString();
-		newSubScript.arguments.page = nObj.value("page").toString();
-		newSubScript.arguments.pageSize = nObj.value("pageSize").toString();
-		nObj = n.toObject().value("response").toObject();
-		newSubScript.responseCheck.successCheckKey = nObj.value("success_check_key").toString();
-		newSubScript.responseCheck.successFlag = nObj.value("success_flag").toString();
-		newSubScript.responseCheck.errorMsg = nObj.value("error_msg").toString();
-		nObj = n.toObject().value("content").toObject();
-		newSubScript.content.key = nObj.value("key").toString();
-		newSubScript.content.parserId = nObj.value("parser_id").toString();
-		script.subScripts.push_back(newSubScript);
-=======
 	data_nArray = data_root.value("collectors").toArray();
 	for (auto n : data_nArray)
 	{
@@ -94,7 +72,6 @@ SEARCHENGINERET OnlineSearchEngine::loadScript(QByteArray scriptData)
 		newCollector.content.key = nObj.value("key").toString();
 		newCollector.content.parserId = nObj.value("parser_id").toString();
 		script.collectors.push_back(newCollector);
->>>>>>> Stashed changes
 	}
 	//解析分析器部分
 	data_nArray = data_root.value("parsers").toArray();
@@ -111,27 +88,6 @@ SEARCHENGINERET OnlineSearchEngine::loadScript(QByteArray scriptData)
 		switch (targetList.indexOf(newParser.buildTarget))
 		{
 		case 0:
-<<<<<<< Updated upstream
-			errorFlag = !buildDataApplierInfo(nObj.value("data").toObject(), &newParser.data);
-			break;
-		case 1:
-			errorFlag = !buildDataApplierInfo(nObj.value("data").toObject(), &newParser.data.ablum);
-			break;
-		case 2:
-			errorFlag = !buildDataApplierInfo(nObj.value("data").toObject(), &newParser.data.mv);
-			break;
-		case 3:
-
-			errorFlag = !buildDataApplierInfo(nObj.value("data").toObject(), &artistInfo_tmp);
-			newParser.data.artists.push_back(artistInfo_tmp);
-			break;
-		case 4:
-			errorFlag = !buildDataApplierInfo(nObj.value("data").toObject(), &newParser.data.lyrics);
-			break;
-		case 5:
-			
-			errorFlag = !buildDataApplierInfo(nObj.value("data").toObject(), &downloadInfo_tmp);
-=======
 			errorFlag = !fillStructFromJson(nObj.value("data").toObject(), &newParser.data);
 			break;
 		case 1:
@@ -151,7 +107,6 @@ SEARCHENGINERET OnlineSearchEngine::loadScript(QByteArray scriptData)
 		case 5:
 			
 			errorFlag = !fillStructFromJson(nObj.value("data").toObject(), &downloadInfo_tmp);
->>>>>>> Stashed changes
 			newParser.data.downloads.push_back(downloadInfo_tmp);
 		default:
 			//ERROR 处理
@@ -161,29 +116,6 @@ SEARCHENGINERET OnlineSearchEngine::loadScript(QByteArray scriptData)
 	}
 }
 
-<<<<<<< Updated upstream
-bool OnlineSearchEngine::buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, MusicInfo* target)
-{
-
-}
-bool OnlineSearchEngine::buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, AlbumInfo* target)
-{
-
-}
-bool OnlineSearchEngine::buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, MvInfo* target)
-{
-
-}
-bool OnlineSearchEngine::buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, AritstInfo* target)
-{
-
-}
-bool OnlineSearchEngine::buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, LyricInfo* target)
-{
-
-}
-bool OnlineSearchEngine::buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, DownloadInfo* target)
-=======
 bool OnlineSearchEngine::fillStructFromJson(QJsonObject jsonData, MusicInfo* target)
 {
 	target.id = jsonData.value("id").toString();
@@ -219,21 +151,14 @@ bool OnlineSearchEngine::fillStructFromJson(QJsonObject jsonData, DownloadInfo* 
 
 }
 void OnlineSearchEngine::parseNameonlyArtistsName(QString rawText, QString separator, std::vector<AritstInfo>* target)
->>>>>>> Stashed changes
 {
 
 }
 
 
-<<<<<<< Updated upstream
-
-std::vector<MusicInfo> OnlineSearchEngine::getSearchResult()
-{
-=======
 std::vector<MusicInfo> OnlineSearchEngine::getSearchResult()
 {
 	//TODO 此处未实现
->>>>>>> Stashed changes
 	std::vector<MusicInfo> EMPTY__;
 	return EMPTY__;
 }

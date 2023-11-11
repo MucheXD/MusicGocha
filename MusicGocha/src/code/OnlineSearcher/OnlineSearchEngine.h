@@ -58,19 +58,11 @@ struct MusicIndexs
 };
 struct MusicInfo
 {
-<<<<<<< Updated upstream
-	QString title{};
-	QString transTitle{};
-	QString subTitle{};
-	QString id{};
-	int32_t duration = -1;
-=======
 	QString id{};
 	QString title{};
 	QString transTitle{};
 	QString subTitle{};
 	QString duration{};
->>>>>>> Stashed changes
 	QDateTime publishTime{};
 	MusicIndexs indexs;
 	AlbumInfo ablum;
@@ -113,11 +105,7 @@ struct OnlineSearcherScript
 	};
 	std::vector<SearchMethod> searchingMethods;
 
-<<<<<<< Updated upstream
-	struct Script
-=======
 	struct Collector
->>>>>>> Stashed changes
 	{
 		QString id{};
 		QString url{};
@@ -140,11 +128,7 @@ struct OnlineSearcherScript
 			QString key = {};
 		}content;
 	};
-<<<<<<< Updated upstream
-	std::vector<Script> subScripts;
-=======
 	std::vector<Collector> collectors;
->>>>>>> Stashed changes
 
 	struct Parser
 	{
@@ -152,10 +136,7 @@ struct OnlineSearcherScript
 		QString buildTarget{};
 		MusicInfo data{}; //如果buildTarget是MusicInfo的子信息，则忽略MusicInfo其它信息
 	};
-<<<<<<< Updated upstream
-=======
 	std::vector<Parser> parsers;
->>>>>>> Stashed changes
 	struct
 	{
 		QString title;
@@ -178,14 +159,6 @@ public:
 	std::vector<MusicInfo> getSearchResult();
 private:
 	OnlineSearcherScript script;
-<<<<<<< Updated upstream
-	bool buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, MusicInfo* target);
-	bool buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, AlbumInfo* target);
-	bool buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, MvInfo* target);
-	bool buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, AritstInfo* target);
-	bool buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, LyricInfo* target);
-	bool buildDataApplierInfo(QJsonObject musicInfoDataApplierScript, DownloadInfo* target);
-=======
 	bool fillStructFromJson(QJsonObject jsonData, MusicInfo* target);
 	bool fillStructFromJson(QJsonObject jsonData, AlbumInfo* target);
 	bool fillStructFromJson(QJsonObject jsonData, MvInfo* target);
@@ -193,5 +166,4 @@ private:
 	bool fillStructFromJson(QJsonObject jsonData, LyricInfo* target);
 	bool fillStructFromJson(QJsonObject jsonData, DownloadInfo* target);
 	void parseNameonlyArtistsName(QString rawText, QString separator, std::vector<AritstInfo>* target);
->>>>>>> Stashed changes
 };
