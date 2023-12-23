@@ -7,6 +7,8 @@
 #include <QJsonArray>
 #include <QJsonvalue>
 
+#include "../basics.h"
+
 struct AritstInfo
 {
 	QString id{};
@@ -33,8 +35,7 @@ struct MvInfo
 {
 	QString id{};
 	QString title{};
-	int32_t duration = -1;
-	int32_t size = -1;
+	QString duration{};
 	std::vector<DownloadInfo> downloads{};
 };
 struct LyricPhrase
@@ -78,7 +79,7 @@ enum SEARCHENGINERET
 {
 	no_error = 0,
 	script_illegaljson,
-	
+
 };
 
 struct OnlineSearcherScript
@@ -133,37 +134,33 @@ struct OnlineSearcherScript
 	struct Parser
 	{
 		QString id{};
-		QString buildTarget{};
-		MusicInfo data{}; //如果buildTarget是MusicInfo的子信息，则忽略MusicInfo其它信息
+		QJsonObject translator{}; //如果buildTarget是MusicInfo的子信息，则忽略MusicInfo其它信息
 	};
 	std::vector<Parser> parsers;
-	struct
-	{
-		QString title;
-		QString duration;
-		QString indexs;
-		QString ablum;
-		QString lyrics_info;
-		QString lyrics;
-		QString cover_info;
-		QString cover;
-		QString download_info;
-	};
 };
 
 class OnlineSearchEngine
 {
 public:
 	OnlineSearchEngine();
-	SEARCHENGINERET loadScript(QByteArray scriptData);
+	void loadScript(QByteArray scriptData);
+	void DEBUG_doParse(QByteArray data);
 	std::vector<MusicInfo> getSearchResult();
 private:
 	OnlineSearcherScript script;
-	bool fillStructFromJson(QJsonObject jsonData, MusicInfo* target);
-	bool fillStructFromJson(QJsonObject jsonData, AlbumInfo* target);
-	bool fillStructFromJson(QJsonObject jsonData, MvInfo* target);
-	bool fillStructFromJson(QJsonObject jsonData, AritstInfo* target);
-	bool fillStructFromJson(QJsonObject jsonData, LyricInfo* target);
-	bool fillStructFromJson(QJsonObject jsonData, DownloadInfo* target);
-	void parseNameonlyArtistsName(QString rawText, QString separator, std::vector<AritstInfo>* target);
+	QJsonValue getJsonValueByPath(QJsonObject const& data, QString path);
+	//获取通过translator对应的实际数据的值。keyInTranslator对应的内容只能是String
+	inline QJsonValue getJsonValueWithTranslator(const QJsonObject& input, const QJsonObject& translator, QString keyInTranslator);
+	//完成解析工作：结果为单个
+	template<typename T> void runParser(QJsonObject const& input, T& output, QJsonObject callInfo);
+	//完成解析工作：结果为vector
+	template<typename T> void runParser(const QJsonObject& input, std::vector<T>& output, QJsonObject callInfo);
+	QJsonObject getTranslatorByParserId(QString parserId);
+
+	void fillStructFromJson(QJsonObject const& input, MusicInfo& output, QJsonObject const& translator);
+	void fillStructFromJson(QJsonObject const& input, AlbumInfo& output, QJsonObject const& translator);
+	void fillStructFromJson(QJsonObject const& input, MvInfo& output, QJsonObject const& translator);
+	void fillStructFromJson(QJsonObject const& input, AritstInfo& output, QJsonObject const& translator);
+	void fillStructFromJson(QJsonObject const& input, LyricInfo& output, QJsonObject const& translator);
+	void fillStructFromJson(QJsonObject const& input, DownloadInfo& output, QJsonObject const& translator);
 };

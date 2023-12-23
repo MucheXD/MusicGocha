@@ -46,15 +46,14 @@ void OnlineSearcherC::assembleSearchEngines()
 			continue;
 		}
 		QByteArray scriptData = scriptFile.readAll();
+		OnlineSearchEngine* engine = new OnlineSearchEngine;
+		engine->loadScript(scriptData);
 
-		OnlineSearchEngine* engine = new OnlineSearchEngine(scriptData);
-
-
-		
-
-		//解析键值
-		configs = parseJsonConfig(data_jsonDoc.object());
-		return ConfigManager::no_error;
+		//DEBUG
+		QFile testFile;
+		testFile.setFileName("E:/TEMP/MUGTEST/kugou_search.json");
+		testFile.open(QIODevice::ReadOnly);
+		engine->DEBUG_doParse(testFile.readAll());
 	}
 }
 

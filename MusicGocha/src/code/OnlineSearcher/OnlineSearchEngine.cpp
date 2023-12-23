@@ -5,13 +5,28 @@ OnlineSearchEngine::OnlineSearchEngine()
 	
 }
 
-SEARCHENGINERET OnlineSearchEngine::loadScript(QByteArray scriptData)
+
+void OnlineSearchEngine::DEBUG_doParse(QByteArray data)
+{
+	QJsonDocument data_jsonDoc;
+	QJsonParseError data_jsonError;
+	data_jsonDoc = data_jsonDoc.fromJson(data, &data_jsonError);
+	if (data_jsonError.error != QJsonParseError::NoError)
+		throw "ERROR";//SEARCHENGINERET::script_illegaljson;
+	QJsonObject data_root = data_jsonDoc.object().value("data").toObject().value("info").toArray().at(0).toObject();
+	MusicInfo result{};
+	fillStructFromJson(data_root, result, getTranslatorByParserId("music_list"));
+	printf(result.id.toStdString().c_str());
+}
+
+
+void OnlineSearchEngine::loadScript(QByteArray scriptData)
 {
 	QJsonDocument data_jsonDoc;
 	QJsonParseError data_jsonError;
 	data_jsonDoc = data_jsonDoc.fromJson(scriptData, &data_jsonError);
 	if (data_jsonError.error != QJsonParseError::NoError)
-		return SEARCHENGINERET::script_illegaljson;
+		throw "ERROR";//SEARCHENGINERET::script_illegaljson;
 	QJsonObject data_root = data_jsonDoc.object();
 	QJsonObject data_nObject;
 	QJsonArray data_nArray;
@@ -79,82 +94,181 @@ SEARCHENGINERET OnlineSearchEngine::loadScript(QByteArray scriptData)
 	{
 		OnlineSearcherScript::Parser newParser;
 		QJsonObject nObj = n.toObject();
-		newParser.buildTarget = nObj.value("build_target").toString();
-		//对不同的data目标启用不同的"填充器脚本的解析器"
-		QStringList targetList = { "music_info","album_info","mv_info","artist_info","lyric_info","download_info" };
-		bool errorFlag = true;
-		AritstInfo artistInfo_tmp;
-		DownloadInfo downloadInfo_tmp;
-		switch (targetList.indexOf(newParser.buildTarget))
-		{
-		case 0:
-			errorFlag = !fillStructFromJson(nObj.value("data").toObject(), &newParser.data);
-			break;
-		case 1:
-			errorFlag = !fillStructFromJson(nObj.value("data").toObject(), &newParser.data.ablum);
-			break;
-		case 2:
-			errorFlag = !fillStructFromJson(nObj.value("data").toObject(), &newParser.data.mv);
-			break;
-		case 3:
-
-			errorFlag = !fillStructFromJson(nObj.value("data").toObject(), &artistInfo_tmp);
-			newParser.data.artists.push_back(artistInfo_tmp);
-			break;
-		case 4:
-			errorFlag = !fillStructFromJson(nObj.value("data").toObject(), &newParser.data.lyrics);
-			break;
-		case 5:
-			
-			errorFlag = !fillStructFromJson(nObj.value("data").toObject(), &downloadInfo_tmp);
-			newParser.data.downloads.push_back(downloadInfo_tmp);
-		default:
-			//ERROR 处理
-			break;
-		}
-		//TODO 11/05提交时完成位置
+		newParser.id = nObj.value("id").toString();
+		newParser.translator = nObj.value("translator").toObject();
+		script.parsers.push_back(newParser);
 	}
 }
 
-bool OnlineSearchEngine::fillStructFromJson(QJsonObject jsonData, MusicInfo* target)
+QJsonValue OnlineSearchEngine::getJsonValueByPath(QJsonObject const& data, QString path)
 {
-	target.id = jsonData.value("id").toString();
-	target.title = jsonData.value("title").toString();
-	target.transTitle = jsonData.value("translated_title").toString();
-	target.subTitle = jsonData.value("sub_title").toString();
-	target.duration = jsonData.value("duration").toString();
-	if(jsonData.containsKey("artists_name"))
+	if (path == "")//path为空则啥也不干，原样返回data
+		return data;
+	QString current{};
+	bool isFinal = false;
+	if (path.indexOf("/") == -1)//判断是否为最后一级，并为current赋值
 	{
-		//TODO 11/10提交时完成位置
-		//问题出现于：artists_name的方式无法对应到MUI中
+		current = path;
+		isFinal = true;
 	}
+	else
+	{
+		bText_before(current, path, "/");
+		isFinal = false;
+	}	
+	QJsonValue currentValue{};
+	//采集当前级的值
+	if (data.value(current).isArray())//数据形式为Array的处理
+	{
+		QString neededIndex{};
+		if (bText_between(neededIndex, current, "[", "]"))//如果定义[N]，则返回对应的项，否则默认第0项
+		{
+			QString key{};
+			bText_before(key, current, "[");//取出实际的键名（去除索引标识符）
+			currentValue = data.value(key).toArray().at(neededIndex.toInt());
+		}
+		else
+			currentValue = data.value(current).toArray().at(0);
+	}
+	else if(data.value(current).isObject())//数据形式为Object
+	{
+		currentValue = data.value(current);
+	}
+	else
+		return data.value(current);//已经是没有下级的键了，哪怕isFinal==false也返回，可能是path写错了
+	if (currentValue.isArray() == true)
+		throw "ERROR";//不支持数组嵌套
 
+	if (isFinal == true)//最后一级就返回，如果还有下级就递归
+		return currentValue;
+	else
+	{
+		QString nextPath{};
+		bText_after(nextPath, path, "/");
+		return getJsonValueByPath(currentValue.toObject(), nextPath);
+	}
 }
-bool OnlineSearchEngine::fillStructFromJson(QJsonObject jsonData, AlbumInfo* target)
+
+inline QJsonValue OnlineSearchEngine::getJsonValueWithTranslator(QJsonObject const& input, QJsonObject const& translator, QString keyInTranslator)
 {
-
+	return getJsonValueByPath(input, translator.value(keyInTranslator).toString());
 }
-bool OnlineSearchEngine::fillStructFromJson(QJsonObject jsonData, MvInfo* target)
+
+template<typename T>
+void OnlineSearchEngine::runParser(QJsonObject const& input, T& output, QJsonObject callInfo)
 {
-
+	QJsonObject const& translator = getTranslatorByParserId(callInfo.value("use").toString());//获取目标解析器脚本ID
+	if (!callInfo.value("input").isString())
+		throw "ERROR";
+	fillStructFromJson(getJsonValueByPath(input, callInfo.value("input").toString()).toObject(), output, translator);
 }
-bool OnlineSearchEngine::fillStructFromJson(QJsonObject jsonData, AritstInfo* target)
+
+template<typename T>
+void OnlineSearchEngine::runParser(QJsonObject const& input, std::vector<T>& output, QJsonObject callInfo)
 {
-
+	QJsonObject const& translator = getTranslatorByParserId(callInfo.value("use").toString());//获取目标解析器脚本ID
+	QJsonArray data_inputArray{};
+	if (callInfo.value("input").isArray())//将input的形式统一为Array
+		data_inputArray = callInfo.value("input").toArray();
+	else
+		data_inputArray.append(callInfo.value("input").toObject());
+	for (auto nInputDataPath : data_inputArray)//遍历并运行所有Input，将结果合并存入result
+	{
+		QJsonValue data_inputValue = getJsonValueByPath(input, nInputDataPath.toString());//Input指向的实际JsonValue
+		if (data_inputValue.isArray())//如果Input指向的Json形式是Array，遍历JsonArray
+		{
+			QJsonArray data_nInput = data_inputValue.toArray();
+			for (QJsonValueRef nInput : data_nInput)
+			{
+				T nResult{};
+				fillStructFromJson(nInput.toObject(), nResult, translator);
+				output.push_back(nResult);
+			}
+		}
+		else if (data_inputValue.isObject())//如果Input指向的Json形式是Object，直接传入这个Object
+		{
+			QJsonObject data_nInput = data_inputValue.toObject();
+			T nResult{};
+			fillStructFromJson(data_nInput, nResult, translator);
+			output.push_back(nResult);
+		}
+		else
+			throw "ERROR";
+	}
 }
-bool OnlineSearchEngine::fillStructFromJson(QJsonObject jsonData, LyricInfo* target)
+
+QJsonObject OnlineSearchEngine::getTranslatorByParserId(QString parserId)
 {
-
+	for (OnlineSearcherScript::Parser n : script.parsers)
+	{
+		if (n.id == parserId)
+			return n.translator;
+	}
+	throw "ERROR";//TODO 异常抛出
 }
-bool OnlineSearchEngine::fillStructFromJson(QJsonObject jsonData, DownloadInfo* target)
+
+void OnlineSearchEngine::fillStructFromJson(QJsonObject const& input, MusicInfo& output, QJsonObject const& translator)
 {
-
+	output.id = getJsonValueWithTranslator(input, translator, "id").toString();
+	output.title = getJsonValueWithTranslator(input, translator, "title").toString();
+	output.transTitle = getJsonValueWithTranslator(input, translator, "transTitle").toString();
+	output.subTitle = getJsonValueWithTranslator(input, translator, "subTitle").toString();
+	output.duration = getJsonValueWithTranslator(input, translator, "duration").toString();
+	if(translator.contains("artistsInfo"))
+	{
+		runParser(input, output.artists, translator.value("artistsInfo").toObject());
+	}
+	else if(translator.contains("artistsName"))
+	{
+		QJsonObject info = translator.value("artistsName").toObject();
+		QString nameText = getJsonValueWithTranslator(input, info, "key").toString();
+		QStringList nameList = nameText.split(info.value("separator").toString());
+		for (QString n : nameList)
+		{
+			AritstInfo nAI{};
+			nAI.name = n;
+			output.artists.push_back(nAI);
+		}
+	}
+	if (translator.contains("albumInfo"))
+		runParser(input, output.ablum, translator.value("albumInfo").toObject());
+	if (translator.contains("mvInfo"))
+		runParser(input, output.mv, translator.value("mvInfo").toObject());
 }
-void OnlineSearchEngine::parseNameonlyArtistsName(QString rawText, QString separator, std::vector<AritstInfo>* target)
+
+void OnlineSearchEngine::fillStructFromJson(QJsonObject const& input, AlbumInfo& output, QJsonObject const& translator)
 {
-
+	output.id = getJsonValueWithTranslator(input, translator, "id").toString();
+	output.name = getJsonValueWithTranslator(input, translator, "name").toString();
+	output.cover.url = getJsonValueWithTranslator(input, translator, "coverImageUrl").toString();
 }
 
+void OnlineSearchEngine::fillStructFromJson(QJsonObject const& input, MvInfo& output, QJsonObject const& translator)
+{
+	output.id = getJsonValueWithTranslator(input, translator, "id").toString();
+	output.title = getJsonValueWithTranslator(input, translator, "title").toString();
+	output.duration = getJsonValueWithTranslator(input, translator, "duration").toString();
+	if (translator.contains("downloads"))
+		runParser(input, output.downloads, translator.value("downloads").toObject());
+}
+
+void OnlineSearchEngine::fillStructFromJson(QJsonObject const& input, AritstInfo& output, QJsonObject const& translator)
+{
+	output.id = getJsonValueWithTranslator(input, translator, "id").toString();
+	output.name = getJsonValueWithTranslator(input, translator, "name").toString();
+}
+
+void OnlineSearchEngine::fillStructFromJson(QJsonObject const& input, LyricInfo& output, QJsonObject const& translator)
+{
+	//TODO 歌词处理
+}
+
+void OnlineSearchEngine::fillStructFromJson(QJsonObject const& input, DownloadInfo& output, QJsonObject const& translator)
+{
+	output.url = getJsonValueWithTranslator(input, translator, "url").toString();
+	output.size = getJsonValueWithTranslator(input, translator, "size").toInt();
+	output.quality = getJsonValueWithTranslator(input, translator, "quality").toInt();
+}
 
 std::vector<MusicInfo> OnlineSearchEngine::getSearchResult()
 {

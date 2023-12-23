@@ -27,7 +27,7 @@ ConfigManager::ErrorList ConfigManager::loadConfig()
 	//校验配置文件基本信息
 	QString text_configHeader;
 	QRegularExpression regExp;
-	if (!bText_between(&text_configHeader, &text_oriConfig, "<manifest>", "</manifest>"))
+	if (!bText_between(text_configHeader, text_oriConfig, "<manifest>", "</manifest>"))
 		return ConfigManager::illegal_config;
 	regExp.setPattern("(?<=\\[for=)[^\\[]*(?=\\])");
 	if (regExp.match(text_configHeader).captured() != PROGRAMTEXTID)//配置与程序不符
@@ -37,7 +37,7 @@ ConfigManager::ErrorList ConfigManager::loadConfig()
 		return ConfigManager::version_incompatible;
 	//读取数据
 	QString text_configData;
-	if (!bText_between(&text_configData, &text_oriConfig, "<data>", "</data>"))
+	if (!bText_between(text_configData, text_oriConfig, "<data>", "</data>"))
 		return ConfigManager::illegal_config;
 
 	QJsonDocument data_jsonDoc;

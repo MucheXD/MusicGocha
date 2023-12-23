@@ -14,7 +14,7 @@ int DialogBox::popMessageBox(QWidget* parent, QString title, QString text
 	return dialogBox.exec();
 }
 
-DialogBox::DialogBox(QWidget* parent) : QDialog(parent)
+DialogBox::DialogBox(QWidget* parent) : QDialog()//(parent)
 {
 	ui_db.setupUi(this);
 	this->setWindowModality(Qt::WindowModal);
