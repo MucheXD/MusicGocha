@@ -51,7 +51,8 @@ void OnlineSearcherC::assembleSearchEngines()
 
 		//DEBUG
 		QFile testFile;
-		testFile.setFileName("E:/TEMP/MUGTEST/kugou_search.json");
+		//testFile.setFileName("E:/TEMP/MUGTEST/kugou_search.json");
+		testFile.setFileName("E:/TEMP/MUGTEST/kugou_getSongInfo.json");
 		testFile.open(QIODevice::ReadOnly);
 		engine->DEBUG_doParse(testFile.readAll());
 	}

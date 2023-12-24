@@ -5,7 +5,6 @@ OnlineSearchEngine::OnlineSearchEngine()
 	
 }
 
-
 void OnlineSearchEngine::DEBUG_doParse(QByteArray data)
 {
 	QJsonDocument data_jsonDoc;
@@ -13,12 +12,21 @@ void OnlineSearchEngine::DEBUG_doParse(QByteArray data)
 	data_jsonDoc = data_jsonDoc.fromJson(data, &data_jsonError);
 	if (data_jsonError.error != QJsonParseError::NoError)
 		throw "ERROR";//SEARCHENGINERET::script_illegaljson;
-	QJsonObject data_root = data_jsonDoc.object().value("data").toObject().value("info").toArray().at(0).toObject();
+	//QJsonObject data_root = data_jsonDoc.object().value("data").toObject().value("info").toArray().at(0).toObject();
+	QJsonObject data_root = data_jsonDoc.object();
 	MusicInfo result{};
-	fillStructFromJson(data_root, result, getTranslatorByParserId("music_list"));
+	//fillStructFromJson(data_root, result, getTranslatorByParserId("music_list"));
+	fillStructFromJson(data_root, result, getTranslatorByParserId("music_detailed_info"));
 	printf(result.id.toStdString().c_str());
-}
 
+	////NEXT DO
+	/*你已经完成了底层的parser运行逻辑，要完成解析器，还有：
+	* - 异常抛出与处理
+	* - 两次获取的信息的合并
+	* 接下来，任务目标是实现collector（收集器）
+	*/
+
+}
 
 void OnlineSearchEngine::loadScript(QByteArray scriptData)
 {
@@ -100,6 +108,13 @@ void OnlineSearchEngine::loadScript(QByteArray scriptData)
 	}
 }
 
+std::vector<MusicInfo> OnlineSearchEngine::getSearchResult()
+{
+	//TODO 此处未实现
+	std::vector<MusicInfo> EMPTY__;
+	return EMPTY__;
+}
+
 QJsonValue OnlineSearchEngine::getJsonValueByPath(QJsonObject const& data, QString path)
 {
 	if (path == "")//path为空则啥也不干，原样返回data
@@ -121,14 +136,16 @@ QJsonValue OnlineSearchEngine::getJsonValueByPath(QJsonObject const& data, QStri
 	if (data.value(current).isArray())//数据形式为Array的处理
 	{
 		QString neededIndex{};
-		if (bText_between(neededIndex, current, "[", "]"))//如果定义[N]，则返回对应的项，否则默认第0项
+		if (bText_between(neededIndex, current, "[", "]"))//如果定义[N]，则返回对应的项
 		{
 			QString key{};
 			bText_before(key, current, "[");//取出实际的键名（去除索引标识符）
 			currentValue = data.value(key).toArray().at(neededIndex.toInt());
 		}
-		else
+		else if (isFinal == false)//如果没有定义[N]，又要向下传，那么就取第0项，否则就取整个数组并返回
 			currentValue = data.value(current).toArray().at(0);
+		else
+			return data.value(current);
 	}
 	else if(data.value(current).isObject())//数据形式为Object
 	{
@@ -151,7 +168,20 @@ QJsonValue OnlineSearchEngine::getJsonValueByPath(QJsonObject const& data, QStri
 
 inline QJsonValue OnlineSearchEngine::getJsonValueWithTranslator(QJsonObject const& input, QJsonObject const& translator, QString keyInTranslator)
 {
-	return getJsonValueByPath(input, translator.value(keyInTranslator).toString());
+	QJsonValue valueInTranslator = translator.value(keyInTranslator);
+	if(valueInTranslator.isString())
+		return getJsonValueByPath(input, translator.value(keyInTranslator).toString());
+	if (valueInTranslator.isObject())
+	{
+		QString ori = getJsonValueByPath(input, valueInTranslator.toObject().value("at").toString()).toString();
+		QRegularExpression regEng(valueInTranslator.toObject().value("regExp").toString());
+		QString resultText{};
+		QRegularExpressionMatchIterator	matchIter = regEng.globalMatch(ori);
+		for (auto n : matchIter)
+			resultText.append(n.captured());
+		return resultText;
+	}
+	return NULL;
 }
 
 template<typename T>
@@ -171,7 +201,7 @@ void OnlineSearchEngine::runParser(QJsonObject const& input, std::vector<T>& out
 	if (callInfo.value("input").isArray())//将input的形式统一为Array
 		data_inputArray = callInfo.value("input").toArray();
 	else
-		data_inputArray.append(callInfo.value("input").toObject());
+		data_inputArray.append(callInfo.value("input").toString());
 	for (auto nInputDataPath : data_inputArray)//遍历并运行所有Input，将结果合并存入result
 	{
 		QJsonValue data_inputValue = getJsonValueByPath(input, nInputDataPath.toString());//Input指向的实际JsonValue
@@ -209,11 +239,12 @@ QJsonObject OnlineSearchEngine::getTranslatorByParserId(QString parserId)
 
 void OnlineSearchEngine::fillStructFromJson(QJsonObject const& input, MusicInfo& output, QJsonObject const& translator)
 {
-	output.id = getJsonValueWithTranslator(input, translator, "id").toString();
+	output.id = getJsonValueWithTranslator(input, translator, "id").toVariant().toString();
 	output.title = getJsonValueWithTranslator(input, translator, "title").toString();
 	output.transTitle = getJsonValueWithTranslator(input, translator, "transTitle").toString();
 	output.subTitle = getJsonValueWithTranslator(input, translator, "subTitle").toString();
-	output.duration = getJsonValueWithTranslator(input, translator, "duration").toString();
+	output.duration = getJsonValueWithTranslator(input, translator, "duration").toVariant().toString();
+	output.cover.url = getJsonValueWithTranslator(input, translator, "coverImageUrl").toString();
 	if(translator.contains("artistsInfo"))
 	{
 		runParser(input, output.artists, translator.value("artistsInfo").toObject());
@@ -234,27 +265,37 @@ void OnlineSearchEngine::fillStructFromJson(QJsonObject const& input, MusicInfo&
 		runParser(input, output.ablum, translator.value("albumInfo").toObject());
 	if (translator.contains("mvInfo"))
 		runParser(input, output.mv, translator.value("mvInfo").toObject());
+	if (translator.contains("downloadsInfo"))
+	{
+		runParser(input, output.downloads, translator.value("downloadsInfo").toObject());
+	}
+	else if (translator.contains("downloadUrl"))
+	{
+		DownloadInfo dlI{};
+		dlI.url = getJsonValueWithTranslator(input, translator, "downloadUrl").toString();
+		output.downloads.push_back(dlI);
+	}
 }
 
 void OnlineSearchEngine::fillStructFromJson(QJsonObject const& input, AlbumInfo& output, QJsonObject const& translator)
 {
-	output.id = getJsonValueWithTranslator(input, translator, "id").toString();
+	output.id = getJsonValueWithTranslator(input, translator, "id").toVariant().toString();
 	output.name = getJsonValueWithTranslator(input, translator, "name").toString();
 	output.cover.url = getJsonValueWithTranslator(input, translator, "coverImageUrl").toString();
 }
 
 void OnlineSearchEngine::fillStructFromJson(QJsonObject const& input, MvInfo& output, QJsonObject const& translator)
 {
-	output.id = getJsonValueWithTranslator(input, translator, "id").toString();
+	output.id = getJsonValueWithTranslator(input, translator, "id").toVariant().toString();
 	output.title = getJsonValueWithTranslator(input, translator, "title").toString();
-	output.duration = getJsonValueWithTranslator(input, translator, "duration").toString();
+	output.duration = getJsonValueWithTranslator(input, translator, "duration").toVariant().toString();
 	if (translator.contains("downloads"))
 		runParser(input, output.downloads, translator.value("downloads").toObject());
 }
 
 void OnlineSearchEngine::fillStructFromJson(QJsonObject const& input, AritstInfo& output, QJsonObject const& translator)
 {
-	output.id = getJsonValueWithTranslator(input, translator, "id").toString();
+	output.id = getJsonValueWithTranslator(input, translator, "id").toVariant().toString();
 	output.name = getJsonValueWithTranslator(input, translator, "name").toString();
 }
 
@@ -268,11 +309,4 @@ void OnlineSearchEngine::fillStructFromJson(QJsonObject const& input, DownloadIn
 	output.url = getJsonValueWithTranslator(input, translator, "url").toString();
 	output.size = getJsonValueWithTranslator(input, translator, "size").toInt();
 	output.quality = getJsonValueWithTranslator(input, translator, "quality").toInt();
-}
-
-std::vector<MusicInfo> OnlineSearchEngine::getSearchResult()
-{
-	//TODO 此处未实现
-	std::vector<MusicInfo> EMPTY__;
-	return EMPTY__;
 }

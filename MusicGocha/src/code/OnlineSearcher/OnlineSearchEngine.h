@@ -6,6 +6,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonvalue>
+#include <QRegularExpression>
 
 #include "../basics.h"
 
@@ -17,7 +18,7 @@ struct AritstInfo
 struct OnlineImageInfo
 {
 	QString url{};
-	QByteArray data{};
+	QByteArray image{};
 };
 struct AlbumInfo
 {
@@ -72,13 +73,6 @@ struct MusicInfo
 	MvInfo mv;
 	std::vector<AritstInfo> artists;
 	std::vector<DownloadInfo> downloads;
-
-};
-
-enum SEARCHENGINERET
-{
-	no_error = 0,
-	script_illegaljson,
 
 };
 
@@ -148,15 +142,17 @@ public:
 	std::vector<MusicInfo> getSearchResult();
 private:
 	OnlineSearcherScript script;
+	//获取Json复合数据data中位于path路径的值，不支持Array嵌套
 	QJsonValue getJsonValueByPath(QJsonObject const& data, QString path);
-	//获取通过translator对应的实际数据的值。keyInTranslator对应的内容只能是String
+	//获取通过translator对应的实际数据的值，keyInTranslator对应的内容只能是String
 	inline QJsonValue getJsonValueWithTranslator(const QJsonObject& input, const QJsonObject& translator, QString keyInTranslator);
 	//完成解析工作：结果为单个
 	template<typename T> void runParser(QJsonObject const& input, T& output, QJsonObject callInfo);
 	//完成解析工作：结果为vector
 	template<typename T> void runParser(const QJsonObject& input, std::vector<T>& output, QJsonObject callInfo);
+	//通过parserId找到其内部的translator
 	QJsonObject getTranslatorByParserId(QString parserId);
-
+	//输入原始Json数据和translator，输出格式化后的Struct
 	void fillStructFromJson(QJsonObject const& input, MusicInfo& output, QJsonObject const& translator);
 	void fillStructFromJson(QJsonObject const& input, AlbumInfo& output, QJsonObject const& translator);
 	void fillStructFromJson(QJsonObject const& input, MvInfo& output, QJsonObject const& translator);
