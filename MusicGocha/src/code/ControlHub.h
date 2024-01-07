@@ -1,5 +1,6 @@
 #pragma once
 #include "basics.h"
+#include <QNetworkAccessManager>
 
 #include "ConfigManager/ConfigManager.h"
 #include "RootWindow/RootWindow.h"
@@ -12,6 +13,7 @@ public:
 	bool launchApp();
 	QVariant getConfigValue(QString key);
 	void setConfigValue(QString key, QVariant value);
+	QNetworkReply* getNetworkReplyGET(QNetworkRequest& request);
 private:
 
 	bool loadStyleSheet();
@@ -19,4 +21,6 @@ private:
 	QString globalStyleSheet;
 	RootWindow* rootWindow;
 	ConfigManager configManager;
+	QNetworkAccessManager networkAccessManager;
+
 };

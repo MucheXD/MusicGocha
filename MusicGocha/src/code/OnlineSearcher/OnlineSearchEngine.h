@@ -7,6 +7,10 @@
 #include <QJsonArray>
 #include <QJsonvalue>
 #include <QRegularExpression>
+#include <QMap>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QSignalMapper>
 
 #include "../basics.h"
 
@@ -96,32 +100,14 @@ struct OnlineSearcherScript
 	{
 		QString id{};
 		QString name{};
-		QString scriptId{};
+		QString runCollector{};
 	};
-	std::vector<SearchMethod> searchingMethods;
+	std::vector<SearchMethod> methods;
 
 	struct Collector
 	{
 		QString id{};
-		QString url{};
-		struct
-		{
-			QString keyword{};
-			QString pageSize{};
-			QString page{};
-			QString method{};
-		}arguments;
-		struct
-		{
-			QString successCheckKey = {};
-			QString successFlag = {};
-			QString errorMsg = {};
-		}responseCheck;
-		struct
-		{
-			QString parserId = {};
-			QString key = {};
-		}content;
+		QJsonObject collectorScript;
 	};
 	std::vector<Collector> collectors;
 
@@ -133,15 +119,35 @@ struct OnlineSearcherScript
 	std::vector<Parser> parsers;
 };
 
-class OnlineSearchEngine
+class OnlineSearchEngine : public QObject
 {
+	Q_OBJECT
 public:
 	OnlineSearchEngine();
 	void loadScript(QByteArray scriptData);
 	void DEBUG_doParse(QByteArray data);
-	std::vector<MusicInfo> getSearchResult();
+	void startSearching(QString keyword, QString methodId);
+	std::vector<MusicInfo> takeResults();
 private:
 	OnlineSearcherScript script;
+	QMap<QString, QVariant> globalData;
+	std::vector<MusicInfo> innerDatabase;
+	struct CollectorContinueInfo//收集器继续信息，用于在完成网络请求后继续特定collector
+	{
+		QString collectorId;
+		QNetworkReply* networkReply{};
+	};
+	QMap<int32_t, CollectorContinueInfo> collectorContinues;//暂存正在等待网络请求响应的收集器,以唯一ID作为标识
+	int32_t collectorContinuesIdCounter;//收集器暂存唯一ID，是一个累加器
+	QSignalMapper collectorContinueSM;
+
+	void runCollector(QString collectorId, QMap<QString, QVariant> const& extraArguments = QMap<QString, QVariant>());
+	void continueCollector(int32_t collectorContinueId);
+	//通过collectorId找到其内部的collectorScript
+	inline QJsonObject getCollectorScriptById(QString collectorId);
+	QString replaceArgumentsToValue(QString oriString, QString replaceStartFlag = "[", QString replaceEndFlag = "]", QString arraySeparator = ",", QMap<QString, QVariant> const& extraArguments = QMap<QString, QVariant>());
+
+
 	//获取Json复合数据data中位于path路径的值，不支持Array嵌套
 	QJsonValue getJsonValueByPath(QJsonObject const& data, QString path);
 	//获取通过translator对应的实际数据的值，keyInTranslator对应的内容只能是String
@@ -159,4 +165,8 @@ private:
 	void fillStructFromJson(QJsonObject const& input, AritstInfo& output, QJsonObject const& translator);
 	void fillStructFromJson(QJsonObject const& input, LyricInfo& output, QJsonObject const& translator);
 	void fillStructFromJson(QJsonObject const& input, DownloadInfo& output, QJsonObject const& translator);
+
+signals:
+	QNetworkReply* _getNetworkReplyGET(QNetworkRequest& request);
+	void _finished();//当全部收集器执行完毕时发射此信号，表明任务完成
 };

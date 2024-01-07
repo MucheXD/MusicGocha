@@ -25,6 +25,6 @@ bool bText_after(QString& ret, const QString& text, QString start, int from)
 {
 	if (text.indexOf(start, from) == -1)
 		return false;
-	ret = text.right(text.indexOf(start, from) + start.length());
+	ret = text.right(text.length() - text.indexOf(start, from) - start.length());
 	return true;
 }

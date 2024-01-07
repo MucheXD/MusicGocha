@@ -1,5 +1,7 @@
 #pragma once
 #include <QWidget>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 #include "../basics.h"
 #include "ui_RootWindow.h"
 
@@ -31,7 +33,9 @@ private:
 	FuncpagesPointer funcPages_pointer;
 	void changePage();
 	QVariant pushRequest_fetchConfigValue(QString key);
+	QNetworkReply* pushRequest_getNetworkReplyGET(QNetworkRequest& request);
 
 signals:
 	QVariant _fetchConfigValue(QString key);
+	QNetworkReply* _getNetworkReplyGET(QNetworkRequest& request);
 };

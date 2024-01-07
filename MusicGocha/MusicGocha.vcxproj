@@ -41,7 +41,7 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>6.5.1_msvc2019_64</QtInstall>
-    <QtModules>core;gui;widgets;</QtModules>
+    <QtModules>core;gui;network;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
@@ -137,13 +137,14 @@
     <ClInclude Include="src\code\ControlHub.h" />
     <QtMoc Include="src\code\OnlineSearcher\OnlineSearcherC.h" />
     <QtMoc Include="src\code\OnlineSearcher\OnlineSearcherW.h" />
-    <ClInclude Include="src\code\OnlineSearcher\OnlineSearchEngine.h" />
+    <QtMoc Include="src\code\OnlineSearcher\OnlineSearchEngine.h" />
     <ClInclude Include="src\code\widgets\DialogBox.h" />
     <QtMoc Include="src\code\RootWindow\RootWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="src\ui\DialogBox.ui" />
-    <QtUic Include="src\ui\OnlineSearcherU.ui" />
+    <QtUic Include="src\ui\OnlineSearcher\OnlineSearcherU.ui" />
+    <QtUic Include="src\ui\OnlineSearcher\SearchResultU.ui" />
     <QtUic Include="src\ui\RootWindow.ui" />
   </ItemGroup>
   <ItemGroup>

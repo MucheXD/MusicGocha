@@ -47,6 +47,7 @@ bool ControlHubCore::launchApp()
 	//启动RootWindow
 	rootWindow = new RootWindow;
 	connect(rootWindow, &RootWindow::_fetchConfigValue, this, &ControlHubCore::getConfigValue);
+	connect(rootWindow, &RootWindow::_getNetworkReplyGET, this, &ControlHubCore::getNetworkReplyGET);
 	rootWindow->setStyleSheet(globalStyleSheet);
 	return true;
 }
@@ -70,6 +71,11 @@ QVariant ControlHubCore::getConfigValue(QString key)
 void ControlHubCore::setConfigValue(QString key, QVariant value)
 {
 	configManager.setConfigValue(key, value);
+}
+
+QNetworkReply* ControlHubCore::getNetworkReplyGET(QNetworkRequest& request)
+{
+	return networkAccessManager.get(request);
 }
 
 ControlHubCore::~ControlHubCore()

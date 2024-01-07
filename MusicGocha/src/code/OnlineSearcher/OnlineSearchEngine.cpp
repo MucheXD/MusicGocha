@@ -2,7 +2,9 @@
 
 OnlineSearchEngine::OnlineSearchEngine()
 {
-	
+	collectorContinueSM.setParent(this);
+	connect(&collectorContinueSM, &QSignalMapper::mappedInt, this, &OnlineSearchEngine::continueCollector);
+	collectorContinuesIdCounter = 0;
 }
 
 void OnlineSearchEngine::DEBUG_doParse(QByteArray data)
@@ -53,47 +55,18 @@ void OnlineSearchEngine::loadScript(QByteArray scriptData)
 		OnlineSearcherScript::SearchMethod newMethod;
 		QJsonObject nObj = n.toObject();
 		newMethod.id = nObj.value("id").toString();
-		const QStringList builtinMethods = { "default","artist","lyric" };
-		switch (builtinMethods.indexOf(newMethod.id))
-		{
-		case 0:
-			newMethod.name = "综合";
-			break;
-		case 1:
-			newMethod.name = "艺术家";
-			break;
-		case 2:
-			newMethod.name = "歌词";
-			break;
-		default:
-			newMethod.name = nObj.value("name").toString();
-			break;
-		}
-		newMethod.scriptId = nObj.value("script").toString();
-		script.searchingMethods.push_back(newMethod);
+		newMethod.name = nObj.value("name").toString();
+		newMethod.runCollector = nObj.value("collector").toString();
+		script.methods.push_back(newMethod);
 	}
-	//解析脚本部分
+	//解析收集器部分
 	data_nArray = data_root.value("collectors").toArray();
 	for (auto n : data_nArray)
 	{
 		OnlineSearcherScript::Collector newCollector;
 		QJsonObject nObj = n.toObject();
 		newCollector.id = nObj.value("id").toString();
-		newCollector.url = nObj.value("url").toString();
-		nObj = nObj.value("arguments").toObject();
-
-		newCollector.arguments.keyword = nObj.value("keyword").toString();
-		newCollector.arguments.method = nObj.value("method").toString();
-		newCollector.arguments.page = nObj.value("page").toString();
-		newCollector.arguments.pageSize = nObj.value("page_size").toString();
-
-		nObj = n.toObject().value("response").toObject();
-		newCollector.responseCheck.successCheckKey = nObj.value("success_check_key").toString();
-		newCollector.responseCheck.successFlag = nObj.value("success_flag").toString();
-		newCollector.responseCheck.errorMsg = nObj.value("error_msg").toString();
-		nObj = n.toObject().value("content").toObject();
-		newCollector.content.key = nObj.value("key").toString();
-		newCollector.content.parserId = nObj.value("parser_id").toString();
+		newCollector.collectorScript = nObj;
 		script.collectors.push_back(newCollector);
 	}
 	//解析分析器部分
@@ -108,12 +81,127 @@ void OnlineSearchEngine::loadScript(QByteArray scriptData)
 	}
 }
 
-std::vector<MusicInfo> OnlineSearchEngine::getSearchResult()
+void OnlineSearchEngine::startSearching(QString keyword,QString methodId)
 {
-	//TODO 此处未实现
-	std::vector<MusicInfo> EMPTY__;
-	return EMPTY__;
+	QString runCollectorId{};
+	std::vector<MusicInfo> results;
+	for (OnlineSearcherScript::SearchMethod n : script.methods)
+	{
+		if (n.id == methodId)
+		{
+			runCollectorId = n.runCollector;
+			break;
+		}	 
+	}
+	if (runCollectorId == "")
+		throw "ERROR";
+	
+	QMap<QString, QVariant> extraArguments;
+	extraArguments.insert("KEYWORD",keyword);
+	extraArguments.insert("PAGESIZE", 10);//TODO 默认了单页10结果
+	extraArguments.insert("PAGE", 1);//TODO 默认搜索了第一页
+	runCollector(runCollectorId, extraArguments);
 }
+
+std::vector<MusicInfo> OnlineSearchEngine::takeResults()
+{
+	std::vector<MusicInfo> temp = innerDatabase;
+	innerDatabase.clear();
+	return temp;
+}
+
+//###COLLECTOR###
+
+void OnlineSearchEngine::runCollector(QString collectorId, QMap<QString, QVariant> const& extraArguments)
+{
+	QJsonObject collectorScript = getCollectorScriptById(collectorId);
+	const QString replaceStartFlag = collectorScript.value("replaceStartFlag").toString("[");
+	const QString replaceEndFlag = collectorScript.value("replaceEndFlag").toString("]");
+	const QString arraySeparator = collectorScript.value("arraySeparator").toString(",");
+	const QString url = replaceArgumentsToValue(collectorScript.value("url").toString(),
+		replaceStartFlag, replaceEndFlag, arraySeparator, extraArguments);
+	//const QString header = replaceArgumentsToValue(collectorScript.value("header").toString(),
+		//replaceStartFlag, replaceEndFlag, arraySeparator, extraArguments);
+
+	//开始发送网络请求，并定义返回时的引导以继续收集器
+	QNetworkRequest networkRequest;
+	networkRequest.setUrl(url);
+	networkRequest.setPriority(QNetworkRequest::HighPriority);//用户发起的网络请求总是优先
+	QNetworkReply* networkReply = emit _getNetworkReplyGET(networkRequest);
+	connect(networkReply, &QNetworkReply::finished, &collectorContinueSM, qOverload<>(&QSignalMapper::map));
+	collectorContinueSM.setMapping(networkReply,collectorContinuesIdCounter);//设置分发规则
+	CollectorContinueInfo continueInfo;//装配继续信息
+	continueInfo.collectorId = collectorId;
+	continueInfo.networkReply = networkReply;
+	collectorContinues.insert(collectorContinuesIdCounter,continueInfo);
+	collectorContinuesIdCounter += 1;//累加计数器
+}
+
+void OnlineSearchEngine::continueCollector(int32_t collectorContinueId)
+{
+	CollectorContinueInfo continueInfo = collectorContinues.take(collectorContinueId);//获取继续信息并销毁暂存区占用
+	QJsonObject collectorScript = getCollectorScriptById(continueInfo.collectorId);
+	//TODO 获取信息后的后续处理与转交给解析器
+	QJsonDocument jsonDoc;
+	QJsonParseError jsonErr;
+
+	jsonDoc = jsonDoc.fromJson(continueInfo.networkReply->readAll(),&jsonErr);
+	if (jsonErr.error != QJsonParseError::NoError)
+		throw "ERROR";
+	QJsonObject jsonData;
+	jsonData = jsonDoc.object();
+	if (getJsonValueByPath(jsonData, collectorScript.value("check").toObject().value("key").toString()).toVariant().toString()
+		!= collectorScript.value("check").toObject().value("flag").toString())
+		throw "EXPERR"; 
+	std::vector<MusicInfo> musicInfos;
+	runParser(jsonData,musicInfos,collectorScript.value("parse").toObject());
+	innerDatabase.insert(innerDatabase.end(), musicInfos.begin(), musicInfos.end());//合并到innerDatabase
+	continueInfo.networkReply->deleteLater();//数据获取完毕后启动networkReply的自动销毁（QT建议做法）
+	
+	//TODO 这里应该是当所有收集器都执行完毕后发射信号，但目前未实现收集器等待列表
+	emit _finished();
+}
+
+inline QJsonObject OnlineSearchEngine::getCollectorScriptById(QString collectorId)
+{
+	for (OnlineSearcherScript::Collector n : script.collectors)
+	{
+		if (n.id == collectorId)
+			return n.collectorScript;
+	}
+	throw "ERROR";//TODO 异常抛出
+}
+
+QString OnlineSearchEngine::replaceArgumentsToValue(QString oriString, QString replaceStartFlag, QString replaceEndFlag, QString arraySeparator, QMap<QString, QVariant> const& extraArguments)
+{
+	QString result = oriString;
+	int32_t nPos = 0;//规定现在替换到的位置，避免嵌套替换（替换结果中又有要替换的项，可能导致死循环）
+	while (result.indexOf(replaceStartFlag) != -1)
+	{
+		QString arguementKeyword{};
+		if (!bText_between(arguementKeyword, result, replaceStartFlag, replaceEndFlag, nPos))
+			throw "ERRORFOUND";//找得到开头却找不到结尾，抛出异常
+		nPos = result.indexOf(replaceStartFlag, nPos);
+		QString realValue{};
+		QVariant realValueVariant{};
+		if (extraArguments.contains(arguementKeyword))//优先从传入的Map中找值
+			realValueVariant = extraArguments.value(arguementKeyword);
+		else if (globalData.contains(arguementKeyword))//从全局Map中找值
+			realValueVariant = globalData.value(arguementKeyword);
+		else
+			throw "NOTFOUND";
+		if (realValueVariant.type() == QVariant::StringList)//如果是StringList类型的，进行合并转换
+			realValue = realValueVariant.toStringList().join(arraySeparator);
+		else
+			realValue = realValueVariant.toString();
+		//TODO 这里还是有隐患，replace将全局的匹配都替换了，如果存在嵌套，nPos会对不上。考虑将整个函数改为RegExp方式
+		result.replace(replaceStartFlag + arguementKeyword + replaceEndFlag, realValue);
+		nPos += realValue.length();//向后移动到本次替换终点
+	}
+	return result;
+}
+
+//###PARSER###
 
 QJsonValue OnlineSearchEngine::getJsonValueByPath(QJsonObject const& data, QString path)
 {
@@ -187,7 +275,7 @@ inline QJsonValue OnlineSearchEngine::getJsonValueWithTranslator(QJsonObject con
 template<typename T>
 void OnlineSearchEngine::runParser(QJsonObject const& input, T& output, QJsonObject callInfo)
 {
-	QJsonObject const& translator = getTranslatorByParserId(callInfo.value("use").toString());//获取目标解析器脚本ID
+	QJsonObject const& translator = getTranslatorByParserId(callInfo.value("use").toString());//获取目标解析器脚本
 	if (!callInfo.value("input").isString())
 		throw "ERROR";
 	fillStructFromJson(getJsonValueByPath(input, callInfo.value("input").toString()).toObject(), output, translator);
@@ -196,7 +284,7 @@ void OnlineSearchEngine::runParser(QJsonObject const& input, T& output, QJsonObj
 template<typename T>
 void OnlineSearchEngine::runParser(QJsonObject const& input, std::vector<T>& output, QJsonObject callInfo)
 {
-	QJsonObject const& translator = getTranslatorByParserId(callInfo.value("use").toString());//获取目标解析器脚本ID
+	QJsonObject const& translator = getTranslatorByParserId(callInfo.value("use").toString());//获取目标解析器脚本
 	QJsonArray data_inputArray{};
 	if (callInfo.value("input").isArray())//将input的形式统一为Array
 		data_inputArray = callInfo.value("input").toArray();

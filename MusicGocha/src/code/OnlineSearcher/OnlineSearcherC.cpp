@@ -3,9 +3,7 @@ OnlineSearcherC::OnlineSearcherC(QWidget* parent)
 {
 	widget_os = new OnlineSearcherW;
 	widget_os->setParent(parent);
-	connect(widget_os, &OnlineSearcherW::_startSearching, this, &OnlineSearcherC::startSearching);
-
-	
+	connect(widget_os, &OnlineSearcherW::_startSearching, this, &OnlineSearcherC::startSearching);	
 }
 void OnlineSearcherC::showWidget()
 {
@@ -47,22 +45,36 @@ void OnlineSearcherC::assembleSearchEngines()
 		}
 		QByteArray scriptData = scriptFile.readAll();
 		OnlineSearchEngine* engine = new OnlineSearchEngine;
+		connect(engine, &OnlineSearchEngine::_getNetworkReplyGET,
+			this, &OnlineSearcherC::pushRequest_getNetworkReplyGET);//桥接信号
 		engine->loadScript(scriptData);
-
-		//DEBUG
-		QFile testFile;
-		//testFile.setFileName("E:/TEMP/MUGTEST/kugou_search.json");
-		testFile.setFileName("E:/TEMP/MUGTEST/kugou_getSongInfo.json");
-		testFile.open(QIODevice::ReadOnly);
-		engine->DEBUG_doParse(testFile.readAll());
+		engines.push_back(engine);
 	}
 }
 
-
-void OnlineSearcherC::startSearching()
+void OnlineSearcherC::startSearching(QString keyword, QString methodId)
 {
-	//QStringList scriptList = emit _fetchConfigValue("work.online_search.script").toStringList();
-	assembleSearchEngines();
+	if (engines.size() == 0)
+		assembleSearchEngines();
+	for (OnlineSearchEngine* engine : engines)
+	{
+		engine->startSearching(keyword, methodId);
+		connect(engine, &OnlineSearchEngine::_finished, this, &OnlineSearcherC::engineFinished);
+	}
 }
 
+void OnlineSearcherC::engineFinished()
+{
+	OnlineSearchEngine* engine = qobject_cast<OnlineSearchEngine*>(sender());
+	mergeToDatabase(engine->takeResults());
+}
 
+void OnlineSearcherC::mergeToDatabase(std::vector<MusicInfo> data)
+{
+	
+}
+
+QNetworkReply* OnlineSearcherC::pushRequest_getNetworkReplyGET(QNetworkRequest& request)
+{
+	return emit _getNetworkReplyGET(request);
+}
