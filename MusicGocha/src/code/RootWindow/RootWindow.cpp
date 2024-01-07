@@ -49,9 +49,21 @@ void RootWindow::changePage()
 		if (funcPages_pointer.onlineSearcher == NULL)
 			funcPages_pointer.onlineSearcher = new OnlineSearcherC(ui_rw.w_funcWorkspace);
 		connect(funcPages_pointer.onlineSearcher, &OnlineSearcherC::_fetchConfigValue,
-			this, &RootWindow::_fetchConfigValue);//信号对信号桥接，实际上直接connect了ControlHub中的槽，下同
+			this, &RootWindow::pushRequest_fetchConfigValue);//信号桥接，下同
+		connect(funcPages_pointer.onlineSearcher, &OnlineSearcherC::_getNetworkReplyGET,
+			this, &RootWindow::pushRequest_getNetworkReplyGET);
 		funcPages_pointer.onlineSearcher->showWidget();
 		ui_rw.GL_workspaceSuit->addWidget(funcPages_pointer.onlineSearcher->getWidgetPointer());
 	}
 	//TODO 由于页面未完成，此处缺失
+}
+
+QVariant RootWindow::pushRequest_fetchConfigValue(QString key)
+{
+	return emit _fetchConfigValue(key);
+}
+
+QNetworkReply* RootWindow::pushRequest_getNetworkReplyGET(QNetworkRequest& request)
+{
+	return emit _getNetworkReplyGET(request);
 }

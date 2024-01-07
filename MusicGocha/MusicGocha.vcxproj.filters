@@ -25,6 +25,9 @@
     <Filter Include="Resources">
       <UniqueIdentifier>{9d75d057-38b4-45c8-81a4-bd13de8b7989}</UniqueIdentifier>
     </Filter>
+    <Filter Include="code\OnlineSearcher\ui">
+      <UniqueIdentifier>{e8a22f13-dec8-4ac7-83f3-ce64309d4c94}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="docs\devlog.txt">
@@ -59,13 +62,13 @@
     <ClCompile Include="src\code\widgets\DialogBox.cpp">
       <Filter>code\widgets</Filter>
     </ClCompile>
+    <ClCompile Include="src\code\OnlineSearcher\OnlineSearchEngine.cpp">
+      <Filter>code\OnlineSearcher</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\code\ControlHub.h">
       <Filter>code</Filter>
-    </ClInclude>
-    <ClInclude Include="src\code\OnlineSearcher\OnlineSearcherW.h">
-      <Filter>code\OnlineSearcher</Filter>
     </ClInclude>
     <ClInclude Include="src\code\basics.h">
       <Filter>code</Filter>
@@ -84,16 +87,25 @@
     <QtMoc Include="src\code\OnlineSearcher\OnlineSearcherC.h">
       <Filter>code\OnlineSearcher</Filter>
     </QtMoc>
+    <QtMoc Include="src\code\OnlineSearcher\OnlineSearcherW.h">
+      <Filter>code\OnlineSearcher</Filter>
+    </QtMoc>
+    <QtMoc Include="src\code\OnlineSearcher\OnlineSearchEngine.h">
+      <Filter>code\OnlineSearcher</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="src\ui\RootWindow.ui">
       <Filter>code\RootWindow</Filter>
     </QtUic>
-    <QtUic Include="src\ui\OnlineSearcherU.ui">
-      <Filter>code\OnlineSearcher</Filter>
-    </QtUic>
     <QtUic Include="src\ui\DialogBox.ui">
       <Filter>code\widgets</Filter>
+    </QtUic>
+    <QtUic Include="src\ui\OnlineSearcher\OnlineSearcherU.ui">
+      <Filter>code\OnlineSearcher\ui</Filter>
+    </QtUic>
+    <QtUic Include="src\ui\OnlineSearcher\SearchResultU.ui">
+      <Filter>code\OnlineSearcher\ui</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>

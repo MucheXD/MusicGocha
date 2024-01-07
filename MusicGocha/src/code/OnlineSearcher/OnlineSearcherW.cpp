@@ -11,7 +11,7 @@ OnlineSearcherW::OnlineSearcherW()
 void OnlineSearcherW::startSearching()
 {
 	ui_os.pb_startSearching->setEnabled(false);
-	emit _startSearching(ui_os.edit_searchInput->text());
+	emit _startSearching(ui_os.edit_searchInput->text(), "default");//TODO固定了搜索方式
 	
 	
 }
