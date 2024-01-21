@@ -18,5 +18,36 @@ void OnlineSearcherW::startSearching()
 
 void OnlineSearcherW::updateUi()
 {
+	//TODO 现在还没有DetailedInfoWidet
+	updateResultZone();
+}
+
+void OnlineSearcherW::updateResultZone()
+{
+	for (MusicGroup nReading : musicGroups)
+	{
+		SearchResultWidgetU* newSearchResultWidget = new SearchResultWidgetU;
+		newSearchResultWidget->setBasicInfo(nReading.sharedTitle, nReading.sharedAblumName);
+		QListWidgetItem* newListWidgetItem = new QListWidgetItem;
+
+		newListWidgetItem->setSizeHint(QSize(0,50));
+
+		ui_os.lw_searchResultZone->addItem(newListWidgetItem);
+		ui_os.lw_searchResultZone->setItemWidget(newListWidgetItem, newSearchResultWidget);
+	}
 	
+
+}
+
+
+
+SearchResultWidgetU::SearchResultWidgetU()
+{
+	ui_w_sr.setupUi(this);
+}
+
+void SearchResultWidgetU::setBasicInfo(QString title, QString information)
+{
+	ui_w_sr.lb_titleText->setText(title);
+	ui_w_sr.lb_information->setText(information);
 }

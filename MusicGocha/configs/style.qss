@@ -74,6 +74,15 @@ QPushButton[isHighlighted=true]:disabled,QToolButton[isHighlighted=true]:disable
 /*Tool Button SP*/
 
 
+/*通用列表控件*/
+/*QListWidget*/
+
+QListWidget {
+    show-decoration-selected: 0;
+}
+QListWidget::item:hover {
+    background-color: hsl(210, 15%, 95%);
+}
 
 /*通用行编辑框*/
 /*Line Edit*/
@@ -341,9 +350,14 @@ QWidget#w_SearchResultU
 	border-width: 1px;
 	border-radius: 3px;
 }
+QWidget#w_SearchResultU>QWidget
+{
+	background-color: transparent;
+}
 QWidget#w_SearchResultU>QWidget#w_title>QLabel#lb_titleText
 {
 	font: 700 11pt "Microsoft YaHei UI";
+	background-color: transparent;
 }
 
 /*自定义的DialogBox特殊样式*/
