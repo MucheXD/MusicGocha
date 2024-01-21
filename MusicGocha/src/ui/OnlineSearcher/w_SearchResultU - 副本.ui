@@ -1,10 +1,38 @@
-/*基础背景与字体*/
-/*background&font*/
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>w_SearchResultU</class>
+ <widget class="QWidget" name="w_SearchResultU">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>608</width>
+    <height>30</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>30</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>30</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/*基础背景与字体*/
+/*background&amp;font*/
 
 QWidget
 {
 	background-color: hsl(210, 50%, 98%);
-	font: 10pt "Microsoft YaHei UI";
+	font: 10pt &quot;Microsoft YaHei UI&quot;;
 }
 
 /*通用普通按钮*/
@@ -70,8 +98,8 @@ QPushButton[isHighlighted=true]:disabled,QToolButton[isHighlighted=true]:disable
 	background-color: hsl(210, 0%, 70%);
 }
 
-/*工具菜单按钮附件*/
-/*Tool Button SP*/
+/*
+*/
 
 
 
@@ -218,7 +246,7 @@ QScrollBar::sub-line:vertical
 }
 
 /*通用菜单内容*/
-/*Menu & Menu Content*/
+/*Menu &amp; Menu Content*/
 
 QMenu
 {
@@ -259,16 +287,16 @@ QMenu::separator
 }
 
 /*w_mainMenu下的特殊控件样式*/
-/*special style under "w_mainMenu"*/
+/*special style under &quot;w_mainMenu&quot;*/
 
 QWidget#w_mainMenu
 {
 	background-color: hsl(210, 60%, 95%);
 }
-QWidget#w_mainMenu>QPushButton
+QWidget#w_mainMenu&gt;QPushButton
 {
 	color: hsl(0, 0%, 10%);
-	font: 10pt "微软雅黑";
+	font: 10pt &quot;微软雅黑&quot;;
 	border-style: solid;
 	border-width: 1px, 0px, 0px, 0px;
 	border-radius: 3px;
@@ -277,62 +305,62 @@ QWidget#w_mainMenu>QPushButton
 	border-left-color: hsl(210, 5%, 100%);
 	background-color: hsl(210, 5%, 100%);
 }
-QWidget#w_mainMenu>QPushButton:hover
+QWidget#w_mainMenu&gt;QPushButton:hover
 {
 	color: hsl(0, 0%, 5%);
 	background-color: hsl(210, 10%, 98%);
 }
-QWidget#w_mainMenu>QPushButton:pressed
+QWidget#w_mainMenu&gt;QPushButton:pressed
 {
 	color: hsl(0, 0%, 0%);
 	background-color: hsl(210, 15%, 95%);
 }
-QWidget#w_mainMenu>QPushButton:checked
+QWidget#w_mainMenu&gt;QPushButton:checked
 {
 	color: #ffffff;
 	background-color: hsl(210, 100%, 40%);
 }
-QWidget#w_mainMenu>QPushButton:checked:hover
+QWidget#w_mainMenu&gt;QPushButton:checked:hover
 {
 	color: #ffffff;
 	background-color: hsl(210, 80%, 45%);
 }
-QWidget#w_mainMenu>QPushButton:checked:pressed
+QWidget#w_mainMenu&gt;QPushButton:checked:pressed
 {
 	color: #ffffff;
 	background-color: hsl(210, 60%, 50%);
 }
-QWidget#w_mainMenu>QPushButton:disabled
+QWidget#w_mainMenu&gt;QPushButton:disabled
 {
 	color: hsl(210, 0%, 60%);
 	border-width: 0px;
 	/*border-color: hsl(210, 0%, 85%);*/
 	background-color: hsl(210, 0%, 95%);
 }
-QWidget#w_mainMenu>QLabel#lb_progStatus
+QWidget#w_mainMenu&gt;QLabel#lb_progStatus
 {
 	color: #ffffff;
 	background-color: hsl(0, 0%, 40%);
 }
-QWidget#w_mainMenu>QLabel#lb_progStatus[status="ready"]
+QWidget#w_mainMenu&gt;QLabel#lb_progStatus[status=&quot;ready&quot;]
 {
 	background-color: hsl(210, 100%, 40%);
 }
-QWidget#w_mainMenu>QLabel#lb_progStatus[status="working"]
+QWidget#w_mainMenu&gt;QLabel#lb_progStatus[status=&quot;working&quot;]
 {
 	background-color: hsl(200, 100%, 40%);
 }
-QWidget#w_mainMenu>QLabel#lb_progStatus[status="warning"]
+QWidget#w_mainMenu&gt;QLabel#lb_progStatus[status=&quot;warning&quot;]
 {
 	background-color: hsl(50, 100%, 40%);
 }
-QWidget#w_mainMenu>QLabel#lb_progStatus[status="fatal"]
+QWidget#w_mainMenu&gt;QLabel#lb_progStatus[status=&quot;fatal&quot;]
 {
 	background-color: hsl(0, 100%, 40%);
 }
 
-/*OnlineSearch>SearchResult下的特殊控件样式*/
-/*special style under "OnlineSearch>SearchResult"*/
+/*OnlineSearch&gt;SearchResult下的特殊控件样式*/
+/*special style under &quot;OnlineSearch&gt;SearchResult&quot;*/
 
 QWidget#w_SearchResultU
 {
@@ -341,58 +369,154 @@ QWidget#w_SearchResultU
 	border-width: 1px;
 	border-radius: 3px;
 }
-QWidget#w_SearchResultU>QWidget#w_title>QLabel#lb_titleText
+QWidget#w_SearchResultU&gt;QWidget#w_title&gt;QLabel#lb_titleText
 {
-	font: 700 11pt "Microsoft YaHei UI";
+	font: 700 11pt &quot;Microsoft YaHei UI&quot;;
 }
 
 /*自定义的DialogBox特殊样式*/
-/*special style under "DialogBoxU"*/
+/*special style under &quot;DialogBoxU&quot;*/
 
 QDialog#DialogBoxU
 {
 	background-color: hsl(210, 50%, 98%);
-	font: 12pt bold "Microsoft YaHei UI";
+	font: 12pt bold &quot;Microsoft YaHei UI&quot;;
 }
-QDialog#DialogBoxU>QWidget#title
+QDialog#DialogBoxU&gt;QWidget#title
 {
 	background-color: hsl(210, 50%, 95%);
 }
-QDialog#DialogBoxU>QWidget#title QLabel
+QDialog#DialogBoxU&gt;QWidget#title QLabel
 {
 	background-color: hsl(210, 50%, 95%);
-	font: 700 16pt "Microsoft YaHei UI";
+	font: 700 16pt &quot;Microsoft YaHei UI&quot;;
 }
-QDialog#DialogBoxU>QWidget#title>QLabel#title_icon
+QDialog#DialogBoxU&gt;QWidget#title&gt;QLabel#title_icon
 {
 	padding: 0px 2px 0px 5px;
 }
-QDialog#DialogBoxU>QWidget#title>QLabel#title_icon[icon=info_blue]
+QDialog#DialogBoxU&gt;QWidget#title&gt;QLabel#title_icon[icon=info_blue]
 {
 	image: url(:/icons/info_blue);
 }
-QDialog#DialogBoxU>QWidget#title>QLabel#title_icon[icon=warning_yellow]
+QDialog#DialogBoxU&gt;QWidget#title&gt;QLabel#title_icon[icon=warning_yellow]
 {
 	image: url(:/icons/warning_yellow);
 }
-QDialog#DialogBoxU>QWidget#title>QLabel#title_icon[icon=warning_red]
+QDialog#DialogBoxU&gt;QWidget#title&gt;QLabel#title_icon[icon=warning_red]
 {
 	image: url(:/icons/warning_red);
 }
-QDialog#DialogBoxU>QWidget#title>QLabel#title_icon[icon=error_red]
+QDialog#DialogBoxU&gt;QWidget#title&gt;QLabel#title_icon[icon=error_red]
 {
 	image: url(:/icons/error_red);
 }
-QDialog#DialogBoxU>QWidget#title>QLabel#title_icon[icon=settings_blue]
+QDialog#DialogBoxU&gt;QWidget#title&gt;QLabel#title_icon[icon=settings_blue]
 {
 	image: url(:/icons/settings_blue);
 }
-QDialog#DialogBoxU>QWidget#title>QLabel#title_icon[icon=critical]
+QDialog#DialogBoxU&gt;QWidget#title&gt;QLabel#title_icon[icon=critical]
 {
 	image: url(:/icons/critical);
 }
-QDialog#DialogBoxU>QLabel#content
+QDialog#DialogBoxU&gt;QLabel#content
 {
-	font: 12pt "Microsoft YaHei UI";
+	font: 12pt &quot;Microsoft YaHei UI&quot;;
 	padding: 10px 10px 10px 10px;
 }
+</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="spacing">
+    <number>2</number>
+   </property>
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
+    <number>2</number>
+   </property>
+   <item>
+    <widget class="QLabel" name="lb_titleText">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>??? NO TITLE ???</string>
+     </property>
+     <property name="margin">
+      <number>5</number>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="lb_information">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>??? NO INFORMATION ???</string>
+     </property>
+     <property name="margin">
+      <number>5</number>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QToolButton" name="toolButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Download</string>
+     </property>
+     <property name="popupMode">
+      <enum>QToolButton::MenuButtonPopup</enum>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextBesideIcon</enum>
+     </property>
+     <property name="autoRaise">
+      <bool>false</bool>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::NoArrow</enum>
+     </property>
+     <property name="isHighlighted" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Play</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

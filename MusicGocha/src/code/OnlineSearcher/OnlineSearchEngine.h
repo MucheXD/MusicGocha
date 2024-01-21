@@ -13,71 +13,25 @@
 #include <QSignalMapper>
 
 #include "../basics.h"
+#include "MusicInfoDefinition.h"
 
-struct AritstInfo
+struct EngineTaskTarget
 {
-	QString id{};
-	QString name{};
-};
-struct OnlineImageInfo
-{
-	QString url{};
-	QByteArray image{};
-};
-struct AlbumInfo
-{
-	QString id{};
-	QString name{};
-	OnlineImageInfo cover;
-};
-struct DownloadInfo
-{
-	int32_t quality = -1;
-	int32_t size = -1;
-	QString url{};
-};
-struct MvInfo
-{
-	QString id{};
-	QString title{};
-	QString duration{};
-	std::vector<DownloadInfo> downloads{};
-};
-struct LyricPhrase
-{
-	int32_t startTime = -1;
-	int32_t endTime = -1;
-	QString content{};
-};
-struct LyricInfo
-{
-	std::vector<LyricPhrase> oriLyric{};
-	std::vector<LyricPhrase> transLyric{};
-	std::vector<LyricPhrase> romLyric{};
-};
-struct MusicIndexs
-{
-	int32_t composite = -1;
-	int32_t plays = -1;
-	int32_t likes = -1;
-	int32_t comments = -1;
-};
-struct MusicInfo
-{
-	QString id{};
-	QString title{};
-	QString transTitle{};
-	QString subTitle{};
-	QString duration{};
-	QDateTime publishTime{};
-	MusicIndexs indexs;
-	AlbumInfo ablum;
-	LyricInfo lyrics;
-	OnlineImageInfo cover;
-	MvInfo mv;
-	std::vector<AritstInfo> artists;
-	std::vector<DownloadInfo> downloads;
-
+	enum TaskTargetTypeENUM
+	{
+		search_task,
+		complete_task,
+		download_task
+	}type;
+	bool isSearchTask() const {
+		return (type == search_task);
+	}
+	bool isCompleteTask() const {
+		return (type == complete_task);
+	}
+	bool isDownloadTask() const {
+		return (type == download_task);
+	}
 };
 
 struct OnlineSearcherScript
@@ -127,14 +81,18 @@ public:
 	void loadScript(QByteArray scriptData);
 	void DEBUG_doParse(QByteArray data);
 	void startSearching(QString keyword, QString methodId);
+	//void startCompleteing(std::vector<MusicInfo> input);
 	std::vector<MusicInfo> takeResults();
+	QString getEngineId();
 private:
 	OnlineSearcherScript script;
 	QMap<QString, QVariant> globalData;
 	std::vector<MusicInfo> innerDatabase;
+	EngineTaskTarget currentRunningTaskTarget;
 	struct CollectorContinueInfo//收集器继续信息，用于在完成网络请求后继续特定collector
 	{
 		QString collectorId;
+		EngineTaskTarget targetType;
 		QNetworkReply* networkReply{};
 	};
 	QMap<int32_t, CollectorContinueInfo> collectorContinues;//暂存正在等待网络请求响应的收集器,以唯一ID作为标识
@@ -168,5 +126,5 @@ private:
 
 signals:
 	QNetworkReply* _getNetworkReplyGET(QNetworkRequest& request);
-	void _finished();//当全部收集器执行完毕时发射此信号，表明任务完成
+	void _finished(EngineTaskTarget targetType);//当全部收集器执行完毕时发射此信号，表明任务完成
 };

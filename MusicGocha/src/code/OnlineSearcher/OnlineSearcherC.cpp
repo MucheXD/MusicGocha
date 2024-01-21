@@ -1,7 +1,7 @@
 #include "OnlineSearcherC.h"
 OnlineSearcherC::OnlineSearcherC(QWidget* parent)
 {
-	widget_os = new OnlineSearcherW;
+	widget_os = new OnlineSearcherW(musicGroups, musicInfoDatabase);
 	widget_os->setParent(parent);
 	connect(widget_os, &OnlineSearcherW::_startSearching, this, &OnlineSearcherC::startSearching);	
 }
@@ -63,15 +63,64 @@ void OnlineSearcherC::startSearching(QString keyword, QString methodId)
 	}
 }
 
-void OnlineSearcherC::engineFinished()
+void OnlineSearcherC::engineFinished(EngineTaskTarget targetType)
 {
 	OnlineSearchEngine* engine = qobject_cast<OnlineSearchEngine*>(sender());
-	mergeToDatabase(engine->takeResults());
+	const QString currentEngineId = engine->getEngineId();
+	const std::vector<MusicInfo> newMusicInfos = engine->takeResults();
+	for (MusicInfo nAdding : newMusicInfos)
+	{
+		bool isJoined = false;
+		for (MusicInfo &nFinding : musicInfoDatabase)//在数据库中查找是否已经存在这个MUI
+		{
+			if (nAdding.sourceId == nFinding.sourceId && nAdding.id == nFinding.id)//判据是源ID和源内音乐ID
+			{
+				nFinding = nAdding;
+				isJoined = true;
+				break;
+			}
+			if (!isJoined)//没有匹配，向数据库添加新项
+				musicInfoDatabase.push_back(nAdding);
+		}
+	}
+	GroupMusicInfos(newMusicInfos);
+
+	if (targetType.isSearchTask())
+		widget_os->updateUi();
 }
 
-void OnlineSearcherC::mergeToDatabase(std::vector<MusicInfo> data)
+void OnlineSearcherC::GroupMusicInfos()
 {
-	
+	musicGroups.clear();
+	GroupMusicInfos(musicInfoDatabase);
+}
+void OnlineSearcherC::GroupMusicInfos(std::vector<MusicInfo> const& newMusicInfo)
+{
+	for (MusicInfo nAnalysing : newMusicInfo)
+	{
+		bool isJoined = false;
+		for (MusicGroup &nTrying : musicGroups)//在现有的组中查找可能合适的组
+		{
+			bool isFit = true;
+			if (nAnalysing.title != nTrying.sharedTitle)
+				isFit = false;
+			if (nAnalysing.ablum.name != nTrying.sharedAblumName)
+				isFit = false;
+			if (isFit)
+			{
+				nTrying.includedMusics.push_back(&nAnalysing);
+				isJoined = true;
+			}
+		}
+		if (!isJoined)//没有找到合适的组，创建新组
+		{
+			MusicGroup newGroup;
+			newGroup.sharedTitle = nAnalysing.title;
+			newGroup.sharedAblumName = nAnalysing.ablum.name;
+			newGroup.includedMusics.push_back(&nAnalysing);
+			musicGroups.push_back(newGroup);
+		}
+	}
 }
 
 QNetworkReply* OnlineSearcherC::pushRequest_getNetworkReplyGET(QNetworkRequest& request)

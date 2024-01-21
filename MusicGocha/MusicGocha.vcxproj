@@ -75,16 +75,22 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <IncludePath>$(Qt_INCLUDEPATH_);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release_x86|Win32'">
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(Qt_INCLUDEPATH_);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
@@ -138,13 +144,14 @@
     <QtMoc Include="src\code\OnlineSearcher\OnlineSearcherC.h" />
     <QtMoc Include="src\code\OnlineSearcher\OnlineSearcherW.h" />
     <QtMoc Include="src\code\OnlineSearcher\OnlineSearchEngine.h" />
+    <ClInclude Include="src\code\OnlineSearcher\MusicInfoDefinition.h" />
     <ClInclude Include="src\code\widgets\DialogBox.h" />
     <QtMoc Include="src\code\RootWindow\RootWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="src\ui\DialogBox.ui" />
     <QtUic Include="src\ui\OnlineSearcher\OnlineSearcherU.ui" />
-    <QtUic Include="src\ui\OnlineSearcher\SearchResultU.ui" />
+    <QtUic Include="src\ui\OnlineSearcher\w_SearchResultU.ui" />
     <QtUic Include="src\ui\RootWindow.ui" />
   </ItemGroup>
   <ItemGroup>

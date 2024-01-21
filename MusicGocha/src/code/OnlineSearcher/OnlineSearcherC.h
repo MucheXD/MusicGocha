@@ -26,9 +26,12 @@ private:
 	//std::vector<OnlineSearcherScript> searcherScripts;
 	std::vector<OnlineSearchEngine*> engines;
 	std::vector<MusicInfo> musicInfoDatabase;
-
-	void engineFinished();
-	void mergeToDatabase(std::vector<MusicInfo> data);
+	std::vector<MusicGroup> musicGroups;
+	void engineFinished(EngineTaskTarget targetType);
+	//根据MUI数据库重新构建分组
+	void GroupMusicInfos();
+	//向分组内添加新的MUI。注意：为了避免野指针，删除MUI时不得使用此重载。
+	void GroupMusicInfos(std::vector<MusicInfo> const& newMusicInfo);
 	QNetworkReply* pushRequest_getNetworkReplyGET(QNetworkRequest& request);
 signals:
 	QVariant _fetchConfigValue(QString key);
