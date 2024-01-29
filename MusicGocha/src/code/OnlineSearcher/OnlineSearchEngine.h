@@ -13,7 +13,7 @@
 #include <QSignalMapper>
 
 #include "../basics.h"
-#include "MusicInfoDefinition.h"
+#include "../definitions/MusicInfoDefinition.h"
 
 struct EngineTaskTarget
 {
