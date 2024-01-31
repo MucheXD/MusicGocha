@@ -15,6 +15,7 @@ public:
 	QWidget* getWidgetPointer();
 
 	void addWork(std::vector<WorkRequest> requests);
+
 private:
 	struct WorkGroup
 	{

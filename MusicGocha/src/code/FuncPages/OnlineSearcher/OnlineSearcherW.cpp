@@ -15,7 +15,6 @@ void OnlineSearcherW::startSearching()
 	ui_os.pb_startSearching->setEnabled(false);
 	emit _startSearching(ui_os.edit_searchInput->text(), "default");//TODO固定了搜索方式
 	
-	
 }
 
 void OnlineSearcherW::updateUi()
@@ -29,10 +28,13 @@ void OnlineSearcherW::updateResultZone()
 	int32_t nUpdatingIndex = 0;
 	while (nUpdatingIndex < musicGroups.size())
 	{
-		SearchResultWidgetU* newSearchResultWidget = new SearchResultWidgetU(nUpdatingIndex);
+		SearchResultWidgetW* newSearchResultWidget = new SearchResultWidgetW(nUpdatingIndex);
 		const MusicGroup& nReadingGroup = musicGroups.at(nUpdatingIndex);
 		newSearchResultWidget->setBasicInfo(nReadingGroup.sharedTitle, nReadingGroup.sharedAblumName);
-		connect(newSearchResultWidget, &SearchResultWidgetU::_clicked, this, &OnlineSearcherW::resultWidgetBodyClicked);
+		connect(newSearchResultWidget, &SearchResultWidgetW::_clicked,
+			this, &OnlineSearcherW::resultWidgetBodyClicked);
+		connect(newSearchResultWidget, &SearchResultWidgetW::_callDownload,
+			this, &OnlineSearcherW::callDownload);
 
 		QListWidgetItem* newListWidgetItem = new QListWidgetItem;
 		newListWidgetItem->setSizeHint(QSize(0, 50));
@@ -52,8 +54,14 @@ void OnlineSearcherW::resultWidgetBodyClicked(int32_t index)
 		detailedInfoW = NULL;
 	}
 	detailedInfoW = new SearchResultDetailedInfoW(this, musicGroups.at(index));
-	connect(detailedInfoW, &SearchResultDetailedInfoW::_widgetClosed, this, &OnlineSearcherW::detailedInfoWidgetClosed);
+	connect(detailedInfoW, &SearchResultDetailedInfoW::_widgetClosed,
+		this, &OnlineSearcherW::detailedInfoWidgetClosed);
 	detailedInfoW->showWidget();
+}
+
+void OnlineSearcherW::callDownload(int32_t index, int32_t downloadConfigIndex)
+{
+	
 }
 
 void OnlineSearcherW::detailedInfoWidgetClosed()
@@ -68,23 +76,34 @@ void OnlineSearcherW::resizeEvent(QResizeEvent* resizeEvent)
 		detailedInfoW->updateGeometryFollowingParent();
 }
 
-SearchResultWidgetU::SearchResultWidgetU(int32_t index)
+// CLASS: SearchResultWidgetW
+
+SearchResultWidgetW::SearchResultWidgetW(int32_t index)
 {
 	ui_w_sr.setupUi(this);
 	widgetIndex = index;
+
+	connect(ui_w_sr.pb_download, &QPushButton::clicked,
+		this, &SearchResultWidgetW::downloadBtnClicked);
 }
 
-void SearchResultWidgetU::setBasicInfo(QString title, QString information)
+void SearchResultWidgetW::setBasicInfo(QString title, QString information)
 {
 	ui_w_sr.lb_titleText->setText(title);
 	ui_w_sr.lb_information->setText(information);
 }
 
-void SearchResultWidgetU::mousePressEvent(QMouseEvent *mouseEvent)
+void SearchResultWidgetW::mousePressEvent(QMouseEvent *mouseEvent)
 {
 	if (mouseEvent->button() == Qt::LeftButton)
 	{
 		emit _clicked(widgetIndex);
 	}
+}
+
+void SearchResultWidgetW::downloadBtnClicked()
+{
+	//TODO 此处UI应该返回下载配置的索引，但由于下载配置没有完成，此项空置
+	emit _callDownload(widgetIndex, 0);
 }
 

@@ -27,22 +27,24 @@ private:
 	void startSearching();
 	void updateResultZone();
 	void resultWidgetBodyClicked(int32_t index);
+	void callDownload(int32_t index, int32_t downloadConfigIndex);
 	void detailedInfoWidgetClosed();
 	void resizeEvent(QResizeEvent* resizeEvent);
 	//void tryReleaseMemory();
 signals:
 	void _startSearching(QString keyword, QString methodId);
 	void _needInfoCompleted(std::vector<MusicInfo*> requestedItem);
+	void _callDownload(MusicGroup& calledMusicGroup, int32_t downloadConfigIndex);
 };
 
-class SearchResultWidgetU : public QWidget
+class SearchResultWidgetW : public QWidget
 {
 
 	Q_OBJECT
 
 public:
 
-	SearchResultWidgetU(int32_t index);
+	SearchResultWidgetW(int32_t index);
 	void setBasicInfo(QString title, QString information);
 
 private:
@@ -51,8 +53,10 @@ private:
 
 protected:
 	void mousePressEvent(QMouseEvent* mouseEvent);
+	void downloadBtnClicked();
 
 signals:
 	void _clicked(int32_t index);
+	void _callDownload(int32_t index, int32_t downloadConfigIndex);
 };
 

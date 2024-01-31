@@ -9,8 +9,6 @@
 #include "../FuncPageABLE.h"
 #include "../../definitions/WorkRequestDefinition.h"
 
-
-
 class OnlineSearcherC : public FuncPageABLE
 {
 	Q_OBJECT
@@ -23,19 +21,25 @@ public:
 	QWidget* getWidgetPointer();
 
 	void assembleSearchEngines();
-	void startSearching(QString keyword, QString methodId);
 	
 private:
+
+
 	OnlineSearcherW* widget_os;
 	//std::vector<OnlineSearcherScript> searcherScripts;
 	std::vector<OnlineSearchEngine*> engines;
 	std::vector<MusicInfo> musicInfoDatabase;
 	std::vector<MusicGroup> musicGroups;
+
+	void startSearching(QString keyword, QString methodId);
+	void startCompleting(CompleteTypeENUM completeType);
 	void engineFinished(EngineTaskTarget targetType);
 	//根据MUI数据库重新构建分组
 	void GroupMusicInfos();
 	//向分组内添加新的MUI。注意：为了避免野指针，删除MUI时不得使用此重载。
 	void GroupMusicInfos(std::vector<MusicInfo> const& newMusicInfo);
+	
+	void startContentDownload(MusicGroup& target, int32_t downloadConfigIndex);
 	QNetworkReply* pushRequest_getNetworkReplyGET(QNetworkRequest& request);
 signals:
 	QVariant _fetchConfigValue(QString key);

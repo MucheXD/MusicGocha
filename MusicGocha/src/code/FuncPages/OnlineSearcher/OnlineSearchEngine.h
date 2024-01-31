@@ -34,6 +34,12 @@ struct EngineTaskTarget
 	}
 };
 
+enum CompleteTypeENUM
+{
+	complete_detailedInfo,
+	complete_downloadInfo
+};
+
 struct OnlineSearcherScript
 {
 	QString id{};
@@ -54,9 +60,17 @@ struct OnlineSearcherScript
 	{
 		QString id{};
 		QString name{};
-		QString runCollector{};
+		QJsonArray runCollectors{};
 	};
 	std::vector<SearchMethod> methods;
+
+	struct Completer
+	{
+		bool isBatchCompletion = false;
+		QJsonArray runCollectors{};
+	};
+	Completer detailedInfoCompleter;
+	Completer downloadInfoCompleter;
 
 	struct Collector
 	{
@@ -81,24 +95,29 @@ public:
 	void loadScript(QByteArray scriptData);
 	void DEBUG_doParse(QByteArray data);
 	void startSearching(QString keyword, QString methodId);
+	void startCompleting(std::vector<MusicInfo> targets, CompleteTypeENUM completeType);
 	//void startCompleteing(std::vector<MusicInfo> input);
 	std::vector<MusicInfo> takeResults();
 	QString getEngineId();
 private:
-	OnlineSearcherScript script;
-	QMap<QString, QVariant> globalData;
-	std::vector<MusicInfo> innerDatabase;
-	EngineTaskTarget currentRunningTaskTarget;
 	struct CollectorContinueInfo//收集器继续信息，用于在完成网络请求后继续特定collector
 	{
 		QString collectorId;
 		EngineTaskTarget targetType;
 		QNetworkReply* networkReply{};
 	};
+
+	OnlineSearcherScript script;
+	QMap<QString, QVariant> globalData;
+	std::vector<MusicInfo> innerDatabase;
+	EngineTaskTarget currentRunningTaskTarget;
 	QMap<int32_t, CollectorContinueInfo> collectorContinues;//暂存正在等待网络请求响应的收集器,以唯一ID作为标识
 	int32_t collectorContinuesIdCounter;//收集器暂存唯一ID，是一个累加器
 	QSignalMapper collectorContinueSM;
 
+	QJsonArray unificationToJsonArray(QJsonValue const& jsonVal);
+
+	void callCollector(QJsonObject callInfo, QMap<QString, QVariant> const& extraArguments = QMap<QString, QVariant>());
 	void runCollector(QString collectorId, QMap<QString, QVariant> const& extraArguments = QMap<QString, QVariant>());
 	void continueCollector(int32_t collectorContinueId);
 	//通过collectorId找到其内部的collectorScript

@@ -56,9 +56,17 @@ void OnlineSearchEngine::loadScript(QByteArray scriptData)
 		QJsonObject nObj = n.toObject();
 		newMethod.id = nObj.value("id").toString();
 		newMethod.name = nObj.value("name").toString();
-		newMethod.runCollector = nObj.value("collector").toString();
+		newMethod.runCollectors = unificationToJsonArray(nObj.value("runCollectors"));
 		script.methods.push_back(newMethod);
 	}
+	//解析填充器部分
+	data_nObject = data_root.value("completer").toObject().value("detailedInfo").toObject();
+	script.detailedInfoCompleter.isBatchCompletion = data_nObject.value("isBatchCompletion").toBool();
+	script.detailedInfoCompleter.runCollectors = unificationToJsonArray(data_nObject.value("runCollectors"));
+	data_nObject = data_root.value("completer").toObject().value("downloadInfo").toObject();
+	script.detailedInfoCompleter.isBatchCompletion = data_nObject.value("isBatchCompletion").toBool();
+	script.downloadInfoCompleter.runCollectors = unificationToJsonArray(data_nObject.value("runCollectors"));
+
 	//解析收集器部分
 	data_nArray = data_root.value("collectors").toArray();
 	for (auto n : data_nArray)
@@ -84,24 +92,36 @@ void OnlineSearchEngine::loadScript(QByteArray scriptData)
 void OnlineSearchEngine::startSearching(QString keyword,QString methodId)
 {
 	QString runCollectorId{};
-	std::vector<MusicInfo> results;
+	OnlineSearcherScript::SearchMethod currentMethod{};
 	for (OnlineSearcherScript::SearchMethod n : script.methods)
 	{
 		if (n.id == methodId)
 		{
-			runCollectorId = n.runCollector;
+			currentMethod = n;
 			break;
 		}	 
 	}
-	if (runCollectorId == "")
+	if (currentMethod.id == "")
 		throw "ERROR";
 	
 	QMap<QString, QVariant> extraArguments;
-	extraArguments.insert("KEYWORD",keyword);
-	extraArguments.insert("PAGESIZE", 10);//TODO 默认了单页10结果
+	extraArguments.insert("KEYWORD", keyword);
+	extraArguments.insert("PAGESIZE", 15);//TODO 默认了单页15结果
 	extraArguments.insert("PAGE", 1);//TODO 默认搜索了第一页
+
+	for (auto nCallInfo : currentMethod.runCollectors)
+		callCollector(nCallInfo.toObject(), extraArguments);
+
 	currentRunningTaskTarget.type = EngineTaskTarget::search_task;
-	runCollector(runCollectorId, extraArguments);
+}
+
+void OnlineSearchEngine::startCompleting(std::vector<MusicInfo> targets, CompleteTypeENUM completeType)
+{
+	
+	//WORKING 补全器调用Collector逻辑
+
+
+	currentRunningTaskTarget.type = EngineTaskTarget::complete_task;
 }
 
 std::vector<MusicInfo> OnlineSearchEngine::takeResults()
@@ -117,6 +137,22 @@ QString OnlineSearchEngine::getEngineId()
 }
 
 //###COLLECTOR###
+
+QJsonArray OnlineSearchEngine::unificationToJsonArray(QJsonValue const& jsonVal)
+{
+	QJsonArray result;
+	if (jsonVal.isObject())
+		result.push_back(jsonVal.toObject());
+	else if (jsonVal.isArray())
+		result = jsonVal.toArray();
+	else
+		throw "ERROR"
+}
+
+void OnlineSearchEngine::callCollector(QJsonObject callInfo, QMap<QString, QVariant> const& extraArguments)
+{
+	runCollector(callInfo.value("use").toString(), extraArguments);
+}
 
 void OnlineSearchEngine::runCollector(QString collectorId, QMap<QString, QVariant> const& extraArguments)
 {

@@ -154,6 +154,7 @@
     <QtMoc Include="src\code\FuncPages\OnlineSearcher\OnlineSearcherW.h" />
     <QtMoc Include="src\code\FuncPages\OnlineSearcher\SearchResultDetailedInfoW.h" />
     <QtMoc Include="src\code\widgets\ShadowMask.h" />
+    <ClInclude Include="src\code\definitions\DownloadConfigDefinition.h" />
     <ClInclude Include="src\code\definitions\MusicInfoDefinition.h" />
     <ClInclude Include="src\code\definitions\WorkRequestDefinition.h" />
     <QtMoc Include="src\code\FuncPages\WorkCenter\WorkCenterC.h" />

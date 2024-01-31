@@ -3,7 +3,10 @@
 OnlineSearcherC::OnlineSearcherC()
 {
 	widget_os = new OnlineSearcherW(musicGroups, musicInfoDatabase);
-	connect(widget_os, &OnlineSearcherW::_startSearching, this, &OnlineSearcherC::startSearching);	
+	connect(widget_os, &OnlineSearcherW::_startSearching,
+		this, &OnlineSearcherC::startSearching);	
+	connect(widget_os, &OnlineSearcherW::_callDownload,
+		this, &OnlineSearcherC::startContentDownload);
 }
 
 void OnlineSearcherC::showWidget()
@@ -55,6 +58,8 @@ void OnlineSearcherC::assembleSearchEngines()
 		OnlineSearchEngine* engine = new OnlineSearchEngine;
 		connect(engine, &OnlineSearchEngine::_getNetworkReplyGET,
 			this, &OnlineSearcherC::pushRequest_getNetworkReplyGET);//桥接信号
+		connect(engine, &OnlineSearchEngine::_finished,
+			this, &OnlineSearcherC::engineFinished);
 		engine->loadScript(scriptData);
 		engines.push_back(engine);
 	}
@@ -67,7 +72,16 @@ void OnlineSearcherC::startSearching(QString keyword, QString methodId)
 	for (OnlineSearchEngine* engine : engines)
 	{
 		engine->startSearching(keyword, methodId);
-		connect(engine, &OnlineSearchEngine::_finished, this, &OnlineSearcherC::engineFinished);
+	}
+}
+
+void OnlineSearcherC::startCompleting(CompleteTypeENUM completeType)
+{
+	if (engines.size() == 0)
+		assembleSearchEngines();
+	for (OnlineSearchEngine* engine : engines)
+	{
+		engine->startCompleting(completeType);
 	}
 }
 
@@ -129,6 +143,15 @@ void OnlineSearcherC::GroupMusicInfos(std::vector<MusicInfo> const& newMusicInfo
 			newGroup.includedMusics.push_back(&nAnalysing);
 			musicGroups.push_back(newGroup);
 		}
+	}
+}
+
+void OnlineSearcherC::startContentDownload(MusicGroup& target, int32_t downloadConfigIndex)
+{
+	for (MusicInfo* nCheck : target.includedMusics)
+	{
+		if (!nCheck->infoIntegrality.downloadInfo)
+			startCompleting(CompleteTypeENUM::complete_downloadInfo);
 	}
 }
 
