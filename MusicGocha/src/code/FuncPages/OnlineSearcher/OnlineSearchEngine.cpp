@@ -100,14 +100,20 @@ void OnlineSearchEngine::startSearching(QString keyword,QString methodId)
 	extraArguments.insert("KEYWORD",keyword);
 	extraArguments.insert("PAGESIZE", 10);//TODO 默认了单页10结果
 	extraArguments.insert("PAGE", 1);//TODO 默认搜索了第一页
+	currentRunningTaskTarget.type = EngineTaskTarget::search_task;
 	runCollector(runCollectorId, extraArguments);
 }
 
 std::vector<MusicInfo> OnlineSearchEngine::takeResults()
 {
-	std::vector<MusicInfo> temp = innerDatabase;
+	std::vector<MusicInfo> musicInfoTemp = innerDatabase;
 	innerDatabase.clear();
-	return temp;
+	return musicInfoTemp;
+}
+
+QString OnlineSearchEngine::getEngineId()
+{
+	return script.id;
 }
 
 //###COLLECTOR###
@@ -133,6 +139,7 @@ void OnlineSearchEngine::runCollector(QString collectorId, QMap<QString, QVarian
 	CollectorContinueInfo continueInfo;//装配继续信息
 	continueInfo.collectorId = collectorId;
 	continueInfo.networkReply = networkReply;
+	continueInfo.targetType = currentRunningTaskTarget;
 	collectorContinues.insert(collectorContinuesIdCounter,continueInfo);
 	collectorContinuesIdCounter += 1;//累加计数器
 }
@@ -141,25 +148,27 @@ void OnlineSearchEngine::continueCollector(int32_t collectorContinueId)
 {
 	CollectorContinueInfo continueInfo = collectorContinues.take(collectorContinueId);//获取继续信息并销毁暂存区占用
 	QJsonObject collectorScript = getCollectorScriptById(continueInfo.collectorId);
-	//TODO 获取信息后的后续处理与转交给解析器
 	QJsonDocument jsonDoc;
 	QJsonParseError jsonErr;
 
 	jsonDoc = jsonDoc.fromJson(continueInfo.networkReply->readAll(),&jsonErr);
+	continueInfo.networkReply->deleteLater();//数据获取完毕后启动networkReply的自动销毁（QT建议做法）
+
 	if (jsonErr.error != QJsonParseError::NoError)
 		throw "ERROR";
 	QJsonObject jsonData;
 	jsonData = jsonDoc.object();
+
 	if (getJsonValueByPath(jsonData, collectorScript.value("check").toObject().value("key").toString()).toVariant().toString()
 		!= collectorScript.value("check").toObject().value("flag").toString())
 		throw "EXPERR"; 
+
 	std::vector<MusicInfo> musicInfos;
 	runParser(jsonData,musicInfos,collectorScript.value("parse").toObject());
+	for (MusicInfo &n : musicInfos)//为所有输出的MUI增加来源信息
+		n.sourceId = script.target;
 	innerDatabase.insert(innerDatabase.end(), musicInfos.begin(), musicInfos.end());//合并到innerDatabase
-	continueInfo.networkReply->deleteLater();//数据获取完毕后启动networkReply的自动销毁（QT建议做法）
-	
-	//TODO 这里应该是当所有收集器都执行完毕后发射信号，但目前未实现收集器等待列表
-	emit _finished();
+	emit _finished(continueInfo.targetType);
 }
 
 inline QJsonObject OnlineSearchEngine::getCollectorScriptById(QString collectorId)

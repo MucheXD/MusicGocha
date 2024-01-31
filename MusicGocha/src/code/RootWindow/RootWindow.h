@@ -5,22 +5,17 @@
 #include "../basics.h"
 #include "ui_RootWindow.h"
 
-#include "../OnlineSearcher/OnlineSearcherC.h"
+#include "../definitions/WorkRequestDefinition.h"
+#include "../FuncPages/FuncPageABLE.h"
 
-enum FuncpagesENUM
+enum FuncpageENUM
 {
 	NULLPAGE = 0,
 	OnlineSearcher = 1,
 	LocalCollector = 2,
-	ItemCart = 3,
-	WorkQueue = 4,
-	Options = 5,
-};
-
-struct FuncpagesPointer
-{
-	FuncpagesENUM currentFuncPage = FuncpagesENUM::NULLPAGE;
-	OnlineSearcherC* onlineSearcher = NULL;
+	WorkCenter = 3,
+	Options = 4,
+	ENDPAGE = 5 //为了方便遍历而设置，值必须为最大
 };
 
 class RootWindow : public QWidget
@@ -28,14 +23,17 @@ class RootWindow : public QWidget
 	Q_OBJECT
 public:
 	RootWindow();
+	void updateCurrentFuncPage(FuncpageENUM current, FuncPageABLE* funcPage);
+	void showWidget();
 private:
 	Ui::RootWindowU ui_rw;
-	FuncpagesPointer funcPages_pointer;
-	void changePage();
+	FuncpageENUM currentFuncPage;
+	void pageChangeNeeded();
 	QVariant pushRequest_fetchConfigValue(QString key);
 	QNetworkReply* pushRequest_getNetworkReplyGET(QNetworkRequest& request);
+	void pushRequest_addWorkToWorkCenter(std::vector<WorkRequest>);
 
 signals:
-	QVariant _fetchConfigValue(QString key);
-	QNetworkReply* _getNetworkReplyGET(QNetworkRequest& request);
+
+	void _changeFuncPage(FuncpageENUM newFuncPageID);
 };
