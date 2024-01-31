@@ -6,9 +6,9 @@
 #include "SearchResultDetailedInfoW.h"
 #include "ui_OnlineSearcherU.h"
 #include "ui_w_SearchResultU.h"
-#include "../widgets/DialogBox.h"
-#include "../definitions/MusicInfoDefinition.h"
-#include "../widgets/ShadowMask.h"
+#include "../../widgets/DialogBox.h"
+#include "../../definitions/MusicInfoDefinition.h"
+#include "../../widgets/ShadowMask.h"
 
 class OnlineSearcherW : public QWidget
 {

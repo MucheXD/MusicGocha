@@ -3,6 +3,26 @@
 ControlHubCore::ControlHubCore()
 {
 	rootWindow = NULL;
+	funcPages = {};
+}
+
+ControlHubCore::~ControlHubCore()
+{
+	while (true)
+	{
+		if (configManager.saveConfig())
+			break;
+		else
+			if (DialogBox::popMessageBox(NULL,
+				"无法写入配置文件",
+				"请检查configs/config.mtd是否存在且可访问\n"
+				"如果你选择终止，程序会正常退出，但对配置做出的修改将不会保存\n",
+				DialogBox::icon_error,
+				DialogBox::btn_abort | DialogBox::btn_retry,
+				false, false, globalStyleSheet)
+				== DialogBox::btn_abort)
+				break;
+	}
 }
 
 bool ControlHubCore::launchApp()
@@ -46,20 +66,11 @@ bool ControlHubCore::launchApp()
 	}
 	//启动RootWindow
 	rootWindow = new RootWindow;
-	connect(rootWindow, &RootWindow::_fetchConfigValue, this, &ControlHubCore::getConfigValue);
-	connect(rootWindow, &RootWindow::_getNetworkReplyGET, this, &ControlHubCore::getNetworkReplyGET);
+	connect(rootWindow, &RootWindow::_changeFuncPage, this, &ControlHubCore::changeFuncPage);
+	//connect(rootWindow, &RootWindow::_fetchConfigValue, this, &ControlHubCore::getConfigValue);
+	//connect(rootWindow, &RootWindow::_getNetworkReplyGET, this, &ControlHubCore::getNetworkReplyGET);
 	rootWindow->setStyleSheet(globalStyleSheet);
-	return true;
-}
-
-bool ControlHubCore::loadStyleSheet()
-{
-	QFile file;
-	file.setFileName("configs/style.qss");
-	if (!file.open(QIODevice::ReadOnly) || file.size() >= 0x100000)//大小大于1MB或打开失败均视作失败
-		return false;
-	globalStyleSheet = file.readAll();
-	file.close();
+	rootWindow->showWidget();
 	return true;
 }
 
@@ -78,21 +89,75 @@ QNetworkReply* ControlHubCore::getNetworkReplyGET(QNetworkRequest& request)
 	return networkAccessManager.get(request);
 }
 
-ControlHubCore::~ControlHubCore()
+void ControlHubCore::addWorkToWorkCenter(std::vector<WorkRequest> requests)
 {
-	while (true)
+	if (funcPages.workCenter == NULL)//如果业务页面未创建，先执行创建
+		createFuncPage(FuncpageENUM::WorkCenter);
+	funcPages.workCenter->addWork(requests);
+}
+
+bool ControlHubCore::loadStyleSheet()
+{
+	QFile file;
+	file.setFileName("configs/style.qss");
+	if (!file.open(QIODevice::ReadOnly) || file.size() >= 0x100000)//大小大于1MB或打开失败均视作失败
+		return false;
+	globalStyleSheet = file.readAll();
+	file.close();
+	return true;
+}
+
+void ControlHubCore::tryDeleteFuncPage(FuncpageENUM needDeletePage)
+{
+	if (needDeletePage==FuncpageENUM::OnlineSearcher && funcPages.onlineSearcher != NULL)
+		if (funcPages.onlineSearcher->tryDelete())
+			funcPages.onlineSearcher = NULL;
+	if (needDeletePage == FuncpageENUM::WorkCenter && funcPages.workCenter != NULL)
+		if (funcPages.workCenter->tryDelete())
+			funcPages.workCenter = NULL;
+	//TODO 由于页面未完成，此处缺失... 真的没有比这样枚举更好的方法了吗?
+}
+
+FuncPageABLE* ControlHubCore::createFuncPage(FuncpageENUM needCreatePage, bool enforced)
+{
+	
+	if (needCreatePage == FuncpageENUM::OnlineSearcher)
 	{
-		if (configManager.saveConfig())
-			break;
-		else
-			if (DialogBox::popMessageBox(NULL,
-				"无法写入配置文件",
-				"请检查configs/config.mtd是否存在且可访问\n"
-				"如果你选择终止，程序会正常退出，但对配置做出的修改将不会保存\n",
-				DialogBox::icon_error,
-				DialogBox::btn_abort | DialogBox::btn_retry,
-				false, false, globalStyleSheet)
-				== DialogBox::btn_abort)
-				break;
+		if (funcPages.onlineSearcher == NULL || enforced)
+			createFuncPage(funcPages.onlineSearcher);
+		return funcPages.onlineSearcher;
 	}
+	if (needCreatePage == FuncpageENUM::WorkCenter)
+	{
+		if (funcPages.workCenter == NULL || enforced)
+			createFuncPage(funcPages.workCenter);
+		return funcPages.workCenter;
+	}
+}
+
+void ControlHubCore::createFuncPage(OnlineSearcherC*& creation)
+{
+	creation = new OnlineSearcherC();
+	connect(creation, &OnlineSearcherC::_fetchConfigValue,
+		this, &ControlHubCore::getConfigValue);
+	connect(creation, &OnlineSearcherC::_getNetworkReplyGET,
+		this, &ControlHubCore::getNetworkReplyGET);
+	connect(creation, &OnlineSearcherC::_addWorkToWorkCenter,
+		this, &ControlHubCore::addWorkToWorkCenter);
+}
+
+void ControlHubCore::createFuncPage(WorkCenterC*& creation)
+{
+	creation = new WorkCenterC();
+}
+
+void ControlHubCore::changeFuncPage(FuncpageENUM newFuncPage)
+{
+	//向不是将调用的页面发送删除请求，是否执行内存释放由对应类自行判断
+	//传入无效的页面会被tryDeleteFuncPage自动忽略，不用担心！
+	for (FuncpageENUM nDelPage = (FuncpageENUM)(FuncpageENUM::NULLPAGE + 1); nDelPage < FuncpageENUM::ENDPAGE; nDelPage = (FuncpageENUM)(nDelPage + 1))
+		tryDeleteFuncPage(nDelPage);
+
+	//自动创建页面（或找到页面指针）并交给UI更新页面
+	rootWindow->updateCurrentFuncPage(newFuncPage, createFuncPage(newFuncPage));
 }

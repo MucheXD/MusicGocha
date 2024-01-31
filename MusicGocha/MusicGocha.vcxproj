@@ -45,9 +45,8 @@
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>6.5.1_msvc2019_64</QtInstall>
-    <QtModules>
-    </QtModules>
+    <QtInstall>6.5.1_MSVC2019_64</QtInstall>
+    <QtModules>core;gui;network;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release_x86|Win32'" Label="QtSettings">
@@ -84,6 +83,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(Qt_INCLUDEPATH_);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <LanguageStandard>$(Qt_STDCPP_)</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -130,11 +134,13 @@
     <ClCompile Include="src\code\basics.cpp" />
     <ClCompile Include="src\code\ConfigManager\ConfigManager.cpp" />
     <ClCompile Include="src\code\ControlHub.cpp" />
+    <ClCompile Include="src\code\FuncPages\OnlineSearcher\OnlineSearchEngine.cpp" />
+    <ClCompile Include="src\code\FuncPages\OnlineSearcher\OnlineSearcherC.cpp" />
+    <ClCompile Include="src\code\FuncPages\OnlineSearcher\OnlineSearcherW.cpp" />
+    <ClCompile Include="src\code\FuncPages\OnlineSearcher\SearchResultDetailedInfoW.cpp" />
+    <ClCompile Include="src\code\FuncPages\WorkCenter\WorkCenterC.cpp" />
+    <ClCompile Include="src\code\FuncPages\WorkCenter\WorkCenterW.cpp" />
     <ClCompile Include="src\code\main.cpp" />
-    <ClCompile Include="src\code\OnlineSearcher\OnlineSearchEngine.cpp" />
-    <ClCompile Include="src\code\OnlineSearcher\OnlineSearcherC.cpp" />
-    <ClCompile Include="src\code\OnlineSearcher\OnlineSearcherW.cpp" />
-    <ClCompile Include="src\code\OnlineSearcher\SearchResultDetailedInfoW.cpp" />
     <ClCompile Include="src\code\RootWindow\RootWindow.cpp" />
     <ClCompile Include="src\code\widgets\DialogBox.cpp" />
     <ClCompile Include="src\code\widgets\ShadowMask.cpp" />
@@ -143,13 +149,16 @@
     <ClInclude Include="src\code\basics.h" />
     <ClInclude Include="src\code\ConfigManager\ConfigManager.h" />
     <ClInclude Include="src\code\ControlHub.h" />
+    <QtMoc Include="src\code\FuncPages\OnlineSearcher\OnlineSearchEngine.h" />
+    <QtMoc Include="src\code\FuncPages\OnlineSearcher\OnlineSearcherC.h" />
+    <QtMoc Include="src\code\FuncPages\OnlineSearcher\OnlineSearcherW.h" />
+    <QtMoc Include="src\code\FuncPages\OnlineSearcher\SearchResultDetailedInfoW.h" />
     <QtMoc Include="src\code\widgets\ShadowMask.h" />
-    <QtMoc Include="src\code\OnlineSearcher\OnlineSearcherC.h" />
-    <QtMoc Include="src\code\OnlineSearcher\OnlineSearcherW.h" />
-    <QtMoc Include="src\code\OnlineSearcher\OnlineSearchEngine.h" />
-    <QtMoc Include="src\code\OnlineSearcher\SearchResultDetailedInfoW.h" />
     <ClInclude Include="src\code\definitions\MusicInfoDefinition.h" />
     <ClInclude Include="src\code\definitions\WorkRequestDefinition.h" />
+    <QtMoc Include="src\code\FuncPages\WorkCenter\WorkCenterC.h" />
+    <ClInclude Include="src\code\FuncPages\FuncPageABLE.h" />
+    <ClInclude Include="src\code\FuncPages\WorkCenter\WorkCenterW.h" />
     <ClInclude Include="src\code\widgets\DialogBox.h" />
     <QtMoc Include="src\code\RootWindow\RootWindow.h" />
   </ItemGroup>

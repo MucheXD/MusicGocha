@@ -1,6 +1,6 @@
 #pragma once
 #include <QWidget>
-#include "../definitions/MusicInfoDefinition.h"
+#include "../../definitions/MusicInfoDefinition.h"
 #include "ui_SearchResultDetailedInfoU.h"
 
 class SearchResultDetailedInfoW : public QWidget

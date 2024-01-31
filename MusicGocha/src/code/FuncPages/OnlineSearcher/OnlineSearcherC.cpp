@@ -1,14 +1,16 @@
 #include "OnlineSearcherC.h"
-OnlineSearcherC::OnlineSearcherC(QWidget* parent)
+
+OnlineSearcherC::OnlineSearcherC()
 {
 	widget_os = new OnlineSearcherW(musicGroups, musicInfoDatabase);
-	widget_os->setParent(parent);
 	connect(widget_os, &OnlineSearcherW::_startSearching, this, &OnlineSearcherC::startSearching);	
 }
+
 void OnlineSearcherC::showWidget()
 {
 	widget_os->show();
 }
+
 bool OnlineSearcherC::tryDelete()
 {
 	//这里应该有一些判断是否有重要资源应保留的判断，若认为不该删除，返回false
@@ -16,6 +18,12 @@ bool OnlineSearcherC::tryDelete()
 	widget_os->deleteLater();
 	return true;
 }
+
+void OnlineSearcherC::setWidgetParent(QWidget* parent)
+{
+	widget_os->setParent(parent);
+}
+
 QWidget* OnlineSearcherC::getWidgetPointer()
 {
 	return widget_os;
@@ -94,6 +102,7 @@ void OnlineSearcherC::GroupMusicInfos()
 	musicGroups.clear();
 	GroupMusicInfos(musicInfoDatabase);
 }
+
 void OnlineSearcherC::GroupMusicInfos(std::vector<MusicInfo> const& newMusicInfo)
 {
 	for (MusicInfo nAnalysing : newMusicInfo)

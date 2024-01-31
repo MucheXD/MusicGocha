@@ -4,18 +4,22 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include "OnlineSearcherW.h"
-#include "../widgets/DialogBox.h"
+#include "../../widgets/DialogBox.h"
 #include "OnlineSearchEngine.h"
+#include "../FuncPageABLE.h"
+#include "../../definitions/WorkRequestDefinition.h"
 
 
 
-class OnlineSearcherC : public QObject
+class OnlineSearcherC : public FuncPageABLE
 {
 	Q_OBJECT
 public:
-	OnlineSearcherC(QWidget* parent);
+	OnlineSearcherC();
+
 	void showWidget();
 	bool tryDelete();
+	void setWidgetParent(QWidget* parent);
 	QWidget* getWidgetPointer();
 
 	void assembleSearchEngines();
@@ -36,6 +40,7 @@ private:
 signals:
 	QVariant _fetchConfigValue(QString key);
 	QNetworkReply* _getNetworkReplyGET(QNetworkRequest& request);
+	void _addWorkToWorkCenter(std::vector<WorkRequest> requests);
 };
 
 

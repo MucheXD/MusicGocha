@@ -12,8 +12,8 @@
 #include <QNetworkRequest>
 #include <QSignalMapper>
 
-#include "../basics.h"
-#include "../definitions/MusicInfoDefinition.h"
+#include "../../basics.h"
+#include "../../definitions/MusicInfoDefinition.h"
 
 struct EngineTaskTarget
 {
