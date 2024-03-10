@@ -62,7 +62,7 @@ struct MusicIndexs
 };
 struct MusicInfo
 {
-	QString sourceId;
+	QString sourceId;//从装配者的target复制
 	MusicInfoIntegrality infoIntegrality;//无论是否有数据，只要执行了对应的填充器，即认为数据完整（防止循环）
 
 	QString id{};

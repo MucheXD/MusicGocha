@@ -3,6 +3,7 @@
 OnlineSearcherC::OnlineSearcherC()
 {
 	widget_os = new OnlineSearcherW(musicGroups, musicInfoDatabase);
+	completerContinuesIdCounter = 0;
 	connect(widget_os, &OnlineSearcherW::_startSearching,
 		this, &OnlineSearcherC::startSearching);	
 	connect(widget_os, &OnlineSearcherW::_callDownload,
@@ -63,6 +64,8 @@ void OnlineSearcherC::assembleSearchEngines()
 		engine->loadScript(scriptData);
 		engines.push_back(engine);
 	}
+	if (engines.size() == 0)
+		throw "NO_ENGINE_ENABLE";
 }
 
 void OnlineSearcherC::startSearching(QString keyword, QString methodId)
@@ -75,14 +78,30 @@ void OnlineSearcherC::startSearching(QString keyword, QString methodId)
 	}
 }
 
-void OnlineSearcherC::startCompleting(CompleteTypeENUM completeType)
+void OnlineSearcherC::startCompletion(std::vector<MusicInfo> needComplete,CompleteTypeENUM completeType, int32_t continueInfoId)
 {
 	if (engines.size() == 0)
 		assembleSearchEngines();
+	int32_t requestSendedNum = 0;
 	for (OnlineSearchEngine* engine : engines)
 	{
-		engine->startCompleting(completeType);
+		EngineTaskTarget engineTaskTarget;
+		engineTaskTarget.aim = continueInfoId;
+		engineTaskTarget.type = EngineTaskTarget::complete_task;
+		std::vector<MusicInfo> completableInfo;
+		for (auto i = 0; i < needComplete.size(); i++)
+		{
+			if (engine->getEngineId() == needComplete.at(i).sourceId)
+			{
+				completableInfo.push_back(needComplete.at(i));
+				//TODO 匹配完成的已发送项应该删除
+				requestSendedNum += 1;
+			}
+		}
+		engine->startCompletion(completableInfo, completeType, engineTaskTarget);	
 	}
+	if (requestSendedNum < needComplete.size())
+		throw "NOT_ALL_SENDED";//注意，上个TODO完成后需要同步修改此处逻辑
 }
 
 void OnlineSearcherC::engineFinished(EngineTaskTarget targetType)
@@ -146,14 +165,33 @@ void OnlineSearcherC::GroupMusicInfos(std::vector<MusicInfo> const& newMusicInfo
 	}
 }
 
-void OnlineSearcherC::startContentDownload(MusicGroup& target, int32_t downloadConfigIndex)
+void OnlineSearcherC::startContentDownload(MusicGroup& target, int32_t workConfigIndex)
 {
+	std::vector<MusicInfo> needComplete;
+	CompleterContinueInfo compContinueInfo;	//继续信息，以准备completer返回时的操作
+
 	for (MusicInfo* nCheck : target.includedMusics)
 	{
+		compContinueInfo.musicInfos.push_back(*nCheck);//即使无需补全的也需要加入
 		if (!nCheck->infoIntegrality.downloadInfo)
-			startCompleting(CompleteTypeENUM::complete_downloadInfo);
+			needComplete.push_back(*nCheck);
 	}
+
+	WorkRequest workRequest;
+	workRequest.workType = WorkRequest::work_register;
+	workRequest.workId = QString("OS.%1").arg(target.sharedTitle.toUtf8().toBase64());	//TODO 优化ID生成以避免同名歌曲无法下载
+	workRequest.workInfo = workConfigs.at(workConfigIndex);
+	emit _addWorkToWorkCenter(workRequest);
+	compContinueInfo.aim = workRequest.workId;
+	compContinueInfo.redirect = compContinueInfo.send_to_work;
+	compContinueInfo.taskId = completerContinuesIdCounter;
+	completerContinuesIdCounter += 1;
+
+	//启动补全器
+	startCompletion(needComplete, CompleteTypeENUM::complete_downloadInfo, compContinueInfo.taskId);
 }
+
+
 
 QNetworkReply* OnlineSearcherC::pushRequest_getNetworkReplyGET(QNetworkRequest& request)
 {

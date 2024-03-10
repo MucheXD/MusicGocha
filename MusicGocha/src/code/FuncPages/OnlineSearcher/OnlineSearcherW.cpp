@@ -59,7 +59,7 @@ void OnlineSearcherW::resultWidgetBodyClicked(int32_t index)
 	detailedInfoW->showWidget();
 }
 
-void OnlineSearcherW::callDownload(int32_t index, int32_t downloadConfigIndex)
+void OnlineSearcherW::callDownload(int32_t index, int32_t workConfigIndex)
 {
 	
 }

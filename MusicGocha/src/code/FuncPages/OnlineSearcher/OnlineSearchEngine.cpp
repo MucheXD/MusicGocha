@@ -115,7 +115,7 @@ void OnlineSearchEngine::startSearching(QString keyword,QString methodId)
 	currentRunningTaskTarget.type = EngineTaskTarget::search_task;
 }
 
-void OnlineSearchEngine::startCompleting(std::vector<MusicInfo> targets, CompleteTypeENUM completeType)
+void OnlineSearchEngine::startCompletion(std::vector<MusicInfo> targets, CompleteTypeENUM completeType, EngineTaskTarget taskTarget)
 {
 	
 	//WORKING 补全器调用Collector逻辑
