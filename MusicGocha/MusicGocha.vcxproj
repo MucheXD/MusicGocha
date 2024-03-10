@@ -172,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="configs\config.mtd" />
+    <None Include="configs\engines\online_search_kugou_official.json" />
     <None Include="configs\style.qss" />
   </ItemGroup>
   <ItemGroup>

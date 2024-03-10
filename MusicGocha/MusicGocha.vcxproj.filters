@@ -37,6 +37,9 @@
     <Filter Include="code\FuncPages\OnlineSearcher\ui">
       <UniqueIdentifier>{e8a22f13-dec8-4ac7-83f3-ce64309d4c94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="configs\engine">
+      <UniqueIdentifier>{6ec9dde1-2806-4dc7-a024-d047a84ff143}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="docs\devlog.txt">
@@ -112,6 +115,9 @@
     <ClInclude Include="src\code\FuncPages\FuncPageABLE.h">
       <Filter>code\FuncPages</Filter>
     </ClInclude>
+    <ClInclude Include="src\code\definitions\DownloadConfigDefinition.h">
+      <Filter>code\definitions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\code\RootWindow\RootWindow.h">
@@ -159,6 +165,9 @@
     </None>
     <None Include="configs\style.qss">
       <Filter>configs</Filter>
+    </None>
+    <None Include="configs\engines\online_search_kugou_official.json">
+      <Filter>configs\engine</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -20,8 +20,7 @@ struct EngineTaskTarget
 	enum TaskTargetTypeENUM
 	{
 		search_task,
-		complete_task,
-		download_task
+		complete_task
 	}type;
 	bool isSearchTask() const {
 		return (type == search_task);
@@ -29,15 +28,13 @@ struct EngineTaskTarget
 	bool isCompleteTask() const {
 		return (type == complete_task);
 	}
-	bool isDownloadTask() const {
-		return (type == download_task);
-	}
+	QVariant aim;//引擎的aim一般指向外部的continueInfoId而不是实际的aiming，因为外部可能需要更多信息
 };
 
 enum CompleteTypeENUM
 {
-	complete_detailedInfo,
-	complete_downloadInfo
+	complete_detailed, //detailed 包括下载信息、所有歌曲信息
+	complete_all //all 另外包含图片、歌词信息
 };
 
 struct OnlineSearcherScript
@@ -70,7 +67,7 @@ struct OnlineSearcherScript
 		QJsonArray runCollectors{};
 	};
 	Completer detailedInfoCompleter;
-	Completer downloadInfoCompleter;
+	Completer allInfoCompleter;
 
 	struct Collector
 	{
@@ -95,7 +92,7 @@ public:
 	void loadScript(QByteArray scriptData);
 	void DEBUG_doParse(QByteArray data);
 	void startSearching(QString keyword, QString methodId);
-	void startCompleting(std::vector<MusicInfo> targets, CompleteTypeENUM completeType);
+	void startCompletion(std::vector<MusicInfo> targets, CompleteTypeENUM completeType, EngineTaskTarget taskTarget);
 	//void startCompleteing(std::vector<MusicInfo> input);
 	std::vector<MusicInfo> takeResults();
 	QString getEngineId();
@@ -112,7 +109,7 @@ private:
 	std::vector<MusicInfo> innerDatabase;
 	EngineTaskTarget currentRunningTaskTarget;
 	QMap<int32_t, CollectorContinueInfo> collectorContinues;//暂存正在等待网络请求响应的收集器,以唯一ID作为标识
-	int32_t collectorContinuesIdCounter;//收集器暂存唯一ID，是一个累加器
+	int32_t collectorContinuesIdCounter;//收集器暂存ID累加器
 	QSignalMapper collectorContinueSM;
 
 	QJsonArray unificationToJsonArray(QJsonValue const& jsonVal);

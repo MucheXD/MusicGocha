@@ -60,12 +60,12 @@ void OnlineSearchEngine::loadScript(QByteArray scriptData)
 		script.methods.push_back(newMethod);
 	}
 	//解析填充器部分
-	data_nObject = data_root.value("completer").toObject().value("detailedInfo").toObject();
+	data_nObject = data_root.value("completer").toObject().value("detailed").toObject();
 	script.detailedInfoCompleter.isBatchCompletion = data_nObject.value("isBatchCompletion").toBool();
 	script.detailedInfoCompleter.runCollectors = unificationToJsonArray(data_nObject.value("runCollectors"));
-	data_nObject = data_root.value("completer").toObject().value("downloadInfo").toObject();
+	data_nObject = data_root.value("completer").toObject().value("all").toObject();
 	script.detailedInfoCompleter.isBatchCompletion = data_nObject.value("isBatchCompletion").toBool();
-	script.downloadInfoCompleter.runCollectors = unificationToJsonArray(data_nObject.value("runCollectors"));
+	script.allInfoCompleter.runCollectors = unificationToJsonArray(data_nObject.value("runCollectors"));
 
 	//解析收集器部分
 	data_nArray = data_root.value("collectors").toArray();
@@ -115,12 +115,22 @@ void OnlineSearchEngine::startSearching(QString keyword,QString methodId)
 	currentRunningTaskTarget.type = EngineTaskTarget::search_task;
 }
 
-void OnlineSearchEngine::startCompleting(std::vector<MusicInfo> targets, CompleteTypeENUM completeType)
+void OnlineSearchEngine::startCompletion(std::vector<MusicInfo> targets, CompleteTypeENUM completeType, EngineTaskTarget taskTarget)
 {
-	
-	//WORKING 补全器调用Collector逻辑
-
-
+	QJsonArray collectors{};
+	if (completeType == CompleteTypeENUM::complete_detailed)
+	{
+		collectors = script.detailedInfoCompleter.runCollectors;
+	}
+		
+	if (completeType == CompleteTypeENUM::complete_all)
+	{
+		collectors = script.allInfoCompleter.runCollectors;
+	}
+	for (auto currentRun : collectors)
+	{
+		runCollector(currentRun.toString());
+	}
 	currentRunningTaskTarget.type = EngineTaskTarget::complete_task;
 }
 

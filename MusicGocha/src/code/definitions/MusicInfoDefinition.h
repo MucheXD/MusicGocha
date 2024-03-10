@@ -6,12 +6,6 @@
 #include <QDateTime>
 
 
-struct MusicInfoIntegrality
-{
-	bool basicInfo = false;
-	bool detailedInfo = false;
-	bool downloadInfo = false;
-};
 struct AritstInfo
 {
 	QString id{};
@@ -62,8 +56,13 @@ struct MusicIndexs
 };
 struct MusicInfo
 {
-	QString sourceId;
-	MusicInfoIntegrality infoIntegrality;//无论是否有数据，只要执行了对应的填充器，即认为数据完整（防止循环）
+	QString sourceId;//从装配者的target复制
+	enum
+	{
+		integrality_basic,
+		integrality_detailed,
+		integrality_all
+	}infoIntegrality;
 
 	QString id{};
 	QString title{};
