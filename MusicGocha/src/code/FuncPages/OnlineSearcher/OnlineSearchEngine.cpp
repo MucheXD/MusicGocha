@@ -156,7 +156,7 @@ QJsonArray OnlineSearchEngine::unificationToJsonArray(QJsonValue const& jsonVal)
 	else if (jsonVal.isArray())
 		result = jsonVal.toArray();
 	else
-		throw "ERROR"
+		throw "ERROR";
 }
 
 void OnlineSearchEngine::callCollector(QJsonObject callInfo, QMap<QString, QVariant> const& extraArguments)

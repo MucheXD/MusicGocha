@@ -91,5 +91,5 @@ struct MusicGroup
 	QString sharedTitle;
 	QString sharedAblumName;
 	QStringList sharedArtistsName;
-	std::vector<MusicInfo*> includedMusics;
+	std::vector<MusicInfo&> includedMusics;
 };

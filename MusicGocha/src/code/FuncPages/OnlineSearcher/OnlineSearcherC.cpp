@@ -7,7 +7,7 @@ OnlineSearcherC::OnlineSearcherC()
 	connect(widget_os, &OnlineSearcherW::_startSearching,
 		this, &OnlineSearcherC::startSearching);	
 	connect(widget_os, &OnlineSearcherW::_callDownload,
-		this, &OnlineSearcherC::startContentDownload);
+		this, &OnlineSearcherC::prepareContentsDownload);
 }
 
 void OnlineSearcherC::showWidget()
@@ -119,7 +119,9 @@ void OnlineSearcherC::continueCompletion(int32_t continueInfoId)
 	//WORKING 合并新的信息并交付下载
 	if (currentContinueInfo.redirect == CompleterContinueInfo::send_to_work)
 	{
-		downloadContents();
+		downloadContents(currentContinueInfo.originalMusicInfosRef,
+			currentContinueInfo.extraInfo.value("workId").toString(),
+			currentContinueInfo.extraInfo.value("workConfigIndex").toInt());
 	}
 }
 
@@ -137,7 +139,7 @@ void OnlineSearcherC::engineFinished(EngineTaskTarget taskTarget)
 		continueCompletion(taskTarget.aim.toInt());
 }
 
-void OnlineSearcherC::mergeMusicInfoSet(std::vector<MusicInfo> &mainSet, std::vector<MusicInfo> &newSet)
+void OnlineSearcherC::mergeMusicInfoSet(std::vector<MusicInfo> &mainSet, const std::vector<MusicInfo> &newSet)
 {
 	for (MusicInfo nAdding : newSet)
 	{
@@ -176,7 +178,7 @@ void OnlineSearcherC::GroupMusicInfos(std::vector<MusicInfo> const& newMusicInfo
 				isFit = false;
 			if (isFit)
 			{
-				nTrying.includedMusics.push_back(&nAnalysing);
+				nTrying.includedMusics.push_back(nAnalysing);
 				isJoined = true;
 			}
 		}
@@ -185,7 +187,7 @@ void OnlineSearcherC::GroupMusicInfos(std::vector<MusicInfo> const& newMusicInfo
 			MusicGroup newGroup;
 			newGroup.sharedTitle = nAnalysing.title;
 			newGroup.sharedAblumName = nAnalysing.ablum.name;
-			newGroup.includedMusics.push_back(&nAnalysing);
+			newGroup.includedMusics.push_back(nAnalysing);
 			musicGroups.push_back(newGroup);
 		}
 	}
@@ -205,8 +207,8 @@ void OnlineSearcherC::prepareContentsDownload(MusicGroup& target, int32_t workCo
 	std::vector<MusicInfo> needCompleteElement;
 	for (auto &currentCheck : target.includedMusics)
 	{
-		if (currentCheck->infoIntegrality == MusicInfo::integrality_basic) 
-			needCompleteElement.push_back(*currentCheck);
+		if (currentCheck.infoIntegrality == MusicInfo::integrality_basic) 
+			needCompleteElement.push_back(currentCheck);
 	}
 	if (needCompleteElement.empty())
 	{
@@ -216,28 +218,35 @@ void OnlineSearcherC::prepareContentsDownload(MusicGroup& target, int32_t workCo
 	{
 		CompleterContinueInfo continueInfo;//用于稍后继续收集器的数据
 		continueInfo.extraInfo.insert("workId", workRequest.workId);
+		continueInfo.extraInfo.insert("workConfigIndex", workConfigIndex);
 		continueInfo.redirect = CompleterContinueInfo::send_to_work;
-		for (MusicInfo* nAdd : target.includedMusics)
-			continueInfo.originalMusicInfos.push_back(*nAdd);//加入原始MUI(将来可能需要它们参与下载决策)
+		for (MusicInfo& nAdd : target.includedMusics)
+			continueInfo.originalMusicInfosRef.push_back(nAdd);//加入全部MUI引用(将来可能需要它们参与下载决策)
 		int32_t currentId = completerContinuesIdCounter();
 		startCompletion(needCompleteElement, CompleteTypeENUM::complete_detailed, currentId);
 		completerContinueInfos.insert(currentId,continueInfo);//保存继续信息到类
 	}
-
-	WorkRequest workRequest;
-	workRequest.workType = WorkRequest::work_register;
-	workRequest.workId = QString("OS.%1").arg(target.sharedTitle.toUtf8().toBase64());	//TODO 优化ID生成以避免同名歌曲无法下载
-	workRequest.workInfo = workConfigs.at(workConfigIndex);
-	emit _addWorkToWorkCenter(workRequest);
-	compContinueInfo.aim = workRequest.workId;
-	compContinueInfo.redirect = compContinueInfo.send_to_work;
-	compContinueInfo.taskId = completerContinuesIdCounter;
-	completerContinuesIdCounter += 1;
-
-	//启动补全器
-	startCompletion(needComplete, CompleteTypeENUM::complete_downloadInfo, compContinueInfo.taskId);
 }
 
+void OnlineSearcherC::downloadContents(std::vector<MusicInfo&> musicInfos, QString workId, int32_t workConfigIndex)
+{
+	//TODO 源决策在此处运行，但相关链路尚未准备完毕
+
+	WorkRequest workRequest;
+	workRequest.workId = workId;
+	workRequest.workType = WorkRequest::work_download;
+
+	//模拟的源决策
+	QJsonObject downloadInfo;
+	downloadInfo.insert("type","download");
+	downloadInfo.insert("title", "下载歌曲体");
+	downloadInfo.insert("url", musicInfos.at(0).downloads.at(0).url);
+	downloadInfo.insert("path", QString("Result/%1.mp3").arg(musicInfos.at(0).title));
+
+	workRequest.workInfo = downloadInfo;
+	_addWorkToWorkCenter(workRequest);
+
+}
 
 //void OnlineSearcherC::startContentDownload(MusicGroup& target, int32_t workConfigIndex)
 //{
@@ -264,6 +273,8 @@ void OnlineSearcherC::prepareContentsDownload(MusicGroup& target, int32_t workCo
 //	//启动补全器
 //	startCompletion(needComplete, CompleteTypeENUM::complete_downloadInfo, compContinueInfo.taskId);
 //}
+
+
 
 QNetworkReply* OnlineSearcherC::pushRequest_getNetworkReplyGET(QNetworkRequest& request)
 {

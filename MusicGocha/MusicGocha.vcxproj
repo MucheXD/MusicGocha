@@ -129,6 +129,7 @@
   <ItemGroup>
     <Text Include="docs\config_key.txt" />
     <Text Include="docs\devlog.txt" />
+    <Text Include="docs\WorkRequestExample.json" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\code\basics.cpp" />

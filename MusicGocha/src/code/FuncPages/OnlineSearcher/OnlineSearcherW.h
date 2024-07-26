@@ -33,7 +33,7 @@ private:
 	//void tryReleaseMemory();
 signals:
 	void _startSearching(QString keyword, QString methodId);
-	void _needInfoCompleted(std::vector<MusicInfo*> requestedItem);
+	void _needInfoCompleted(std::vector<MusicInfo&> requestedItem);
 	void _callDownload(MusicGroup& calledMusicGroup, int32_t workConfigIndex);
 };
 

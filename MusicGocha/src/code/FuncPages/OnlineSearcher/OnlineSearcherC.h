@@ -27,7 +27,7 @@ private:
 	struct CompleterContinueInfo
 	{
 		QJsonObject extraInfo;
-		std::vector<MusicInfo> originalMusicInfos;
+		std::vector<MusicInfo&> originalMusicInfosRef;
 		enum
 		{
 			send_to_work,
@@ -49,7 +49,7 @@ private:
 	void startCompletion(std::vector<MusicInfo> needComplete, CompleteTypeENUM completeType, int32_t continueInfoId);
 	void continueCompletion(int32_t continueInfoId);
 	void engineFinished(EngineTaskTarget targetType);
-	void mergeMusicInfoSet(std::vector<MusicInfo> &mainSet, std::vector<MusicInfo> &newSet);
+	void mergeMusicInfoSet(std::vector<MusicInfo> &mainSet, const std::vector<MusicInfo> &newSet);
 	//根据MUI数据库重新构建分组
 	void GroupMusicInfos();
 	//向分组内添加新的MUI。注意：为了避免野指针，删除MUI时不得使用此重载。
@@ -57,12 +57,12 @@ private:
 
 	void prepareContentsDownload(MusicGroup& target, int32_t workConfigIndex);
 
-	void downloadContents(std::vector<MusicInfo> musicInfos, int32_t workConfigIndex);
+	void downloadContents(std::vector<MusicInfo&> musicInfos, QString workId, int32_t workConfigIndex);
 
 	//给定一个MUG(在UI上作为一个单元)，检查下载信息是否完整以及向WorkCenter提供任务注册
-	void startContentDownload(MusicGroup& target, int32_t workConfigIndex);
+	//void sendContentsDownload(std::vector<MusicInfo&> musicInfos, int32_t workConfigIndex);
 	//补全器完成后，调用该函数，由该函数负责装配最终任务信息并提交给WorkCenter
-	void contentDownloadContinue(int32_t completerContinueInfoIndex);
+	//void contentDownloadContinue(int32_t completerContinueInfoIndex);
 	QNetworkReply* pushRequest_getNetworkReplyGET(QNetworkRequest& request);
 signals:
 	QVariant _fetchConfigValue(QString key);

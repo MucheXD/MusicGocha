@@ -48,6 +48,9 @@
     <Text Include="docs\config_key.txt">
       <Filter>Documents</Filter>
     </Text>
+    <Text Include="docs\WorkRequestExample.json">
+      <Filter>Documents</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\code\ControlHub.cpp">

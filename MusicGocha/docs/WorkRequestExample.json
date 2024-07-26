@@ -1,0 +1,6 @@
+{
+	"title": "下载歌曲体",
+	"type": "download",
+	"url": "example.com/res/music.mp3",
+	"path": "result"
+}
