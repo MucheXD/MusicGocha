@@ -119,7 +119,7 @@ void OnlineSearcherC::continueCompletion(int32_t continueInfoId)
 	//WORKING 合并新的信息并交付下载
 	if (currentContinueInfo.redirect == CompleterContinueInfo::send_to_work)
 	{
-		
+		downloadContents();
 	}
 }
 
@@ -137,7 +137,7 @@ void OnlineSearcherC::engineFinished(EngineTaskTarget taskTarget)
 		continueCompletion(taskTarget.aim.toInt());
 }
 
-void OnlineSearcherC::mergeMusicInfoSet(std::vector<MusicInfo> &mainSet, const std::vector<MusicInfo> &newSet)
+void OnlineSearcherC::mergeMusicInfoSet(std::vector<MusicInfo> &mainSet, std::vector<MusicInfo> &newSet)
 {
 	for (MusicInfo nAdding : newSet)
 	{
@@ -223,6 +223,19 @@ void OnlineSearcherC::prepareContentsDownload(MusicGroup& target, int32_t workCo
 		startCompletion(needCompleteElement, CompleteTypeENUM::complete_detailed, currentId);
 		completerContinueInfos.insert(currentId,continueInfo);//保存继续信息到类
 	}
+
+	WorkRequest workRequest;
+	workRequest.workType = WorkRequest::work_register;
+	workRequest.workId = QString("OS.%1").arg(target.sharedTitle.toUtf8().toBase64());	//TODO 优化ID生成以避免同名歌曲无法下载
+	workRequest.workInfo = workConfigs.at(workConfigIndex);
+	emit _addWorkToWorkCenter(workRequest);
+	compContinueInfo.aim = workRequest.workId;
+	compContinueInfo.redirect = compContinueInfo.send_to_work;
+	compContinueInfo.taskId = completerContinuesIdCounter;
+	completerContinuesIdCounter += 1;
+
+	//启动补全器
+	startCompletion(needComplete, CompleteTypeENUM::complete_downloadInfo, compContinueInfo.taskId);
 }
 
 
